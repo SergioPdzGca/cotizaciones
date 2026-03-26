@@ -11,7 +11,7 @@
   --green-light:#e8f5ed;
   --green-mid:  #a3d4b4;
   --green-dark: #0f4a23;
-  --accent:     #f5c842;
+  --accent:     #ddd9cd;
   --ink:        #111;
   --muted:      #6b7280;
   --border:     #d1d5db;
@@ -27,8 +27,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 /* ── SIDEBAR ── */
 #toolbar{
   position:fixed;top:0;left:0;width:220px;height:100vh;
-  background:rgb(6, 21, 77);
-  padding:24px 16px;
+  background:rgb(4, 4, 66);padding:24px 16px;
   display:flex;flex-direction:column;gap:7px;z-index:100;
   box-shadow:4px 0 24px rgba(0,0,0,.2);overflow-y:auto;
 }
@@ -273,20 +272,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 }
 .uni-select:hover,.uni-select:focus{background:var(--green-light);}
 
-/* ── PAGE FOOTER (pie de página) ── */
-.page-footer{
-  margin-top:2px;
+/* ── PIE DE PÁGINA EDITABLE (pantalla) ── */
+.page-footer-editor{
   border-top:2px solid var(--green);
-  padding:8px 32px 10px;
-  display:flex;align-items:center;justify-content:center;
-  gap:12px;
+  padding:10px 32px 14px;
+  background:var(--green-light);
+  display:flex;align-items:flex-start;gap:12px;
+}
+.page-footer-editor-label{
+  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--green-dark);white-space:nowrap;padding-top:4px;flex-shrink:0;
 }
 .page-footer-inner{
-  font-size:9.5px;color:var(--muted);line-height:1.5;
-  outline:none;text-align:center;border-radius:4px;padding:3px 8px;
-  transition:background var(--transition);flex:1;max-width:700px;
+  font-size:9.5px;color:#374151;line-height:1.6;
+  outline:none;border-radius:4px;padding:3px 8px;flex:1;
+  transition:background var(--transition);min-height:22px;
+  border:1px dashed var(--green-mid);background:rgba(255,255,255,.6);
 }
-.page-footer-inner:hover,.page-footer-inner:focus{background:var(--green-light);color:var(--ink);}
+.page-footer-inner:hover,.page-footer-inner:focus{background:var(--white);}
+
+/* ── PIE FIJO EN IMPRESIÓN (se repite cada hoja) ── */
+#print-footer-fixed{display:none;}
+@media print{
+  /* reservar espacio al fondo de cada página */
+  @page{ margin-bottom:2cm; }
+
+  #print-footer-fixed{
+    display:block !important;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    height:1.6cm;
+    border-top:2pt solid #1d7a3c;
+    background:white;
+    padding:4pt 14pt 0;
+    font-size:7pt;
+    color:#555;
+    line-height:1.5;
+    text-align:center;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+}
 
 /* ══════════════════════════════════════════
    PRINT STYLES
@@ -415,7 +441,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   .client-info    { padding: 6pt 14pt 8pt !important; }
   .intro-text     { padding: 5pt 14pt !important; }
   .client-bar     { padding: 4pt 14pt !important; }
-  .page-footer    { padding: 5pt 14pt 7pt !important; }
+  .page-footer-editor { border-top: 1.5pt solid var(--green) !important; padding: 0 !important; display: none !important; }
   .page-footer-inner { font-size: 7pt !important; color: #555 !important; }
   .placeholder-hint { display: none !important; }
 }
@@ -601,14 +627,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     </div>
   </div>
 
-  <!-- PIE DE PÁGINA -->
-  <div class="page-footer">
+  <!-- PIE DE PÁGINA EDITABLE -->
+  <div class="page-footer-editor">
+    <div class="page-footer-editor-label">🗒 Pie de página<br><span style="font-weight:400;opacity:.7;">(aparece en cada hoja)</span></div>
     <div class="page-footer-inner" id="page-footer-text" contenteditable="true" spellcheck="false"
-      data-placeholder="Pie de página — escribe aquí información adicional, aviso legal, redes sociales..."></div>
+      data-placeholder="Escribe aquí el pie de página: dirección, teléfono, aviso legal, redes..."></div>
   </div>
 
 </div><!-- /paper -->
 </div><!-- /wrapper -->
+
+<!-- PIE FIJO PARA IMPRESIÓN — se repite en cada hoja -->
+<div id="print-footer-fixed"></div>
 
 <div id="toast"></div>
 
@@ -1026,6 +1056,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render();
   setSaveDot('','Sin cambios');
+
+  // ── SYNC PIE DE PÁGINA FIJO PARA IMPRESIÓN ──
+  function syncPrintFooter() {
+    const src = document.getElementById('page-footer-text');
+    const dst = document.getElementById('print-footer-fixed');
+    if (!dst) return;
+    // Copiar contenido, ignorando el placeholder
+    const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
+    dst.innerHTML = html || '';
+  }
+  // Sincronizar en cada cambio
+  document.getElementById('page-footer-text').addEventListener('input', syncPrintFooter);
+  // Sincronizar antes de imprimir
+  window.addEventListener('beforeprint', syncPrintFooter);
 });
 </script>
 </body>
