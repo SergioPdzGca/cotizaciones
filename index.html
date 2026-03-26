@@ -27,7 +27,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 /* ── SIDEBAR ── */
 #toolbar{
   position:fixed;top:0;left:0;width:220px;height:100vh;
-  background:var(--green-dark);padding:24px 16px;
+  background:rgb(39, 39, 82);
+  padding:24px 16px;
   display:flex;flex-direction:column;gap:7px;z-index:100;
   box-shadow:4px 0 24px rgba(0,0,0,.2);overflow-y:auto;
 }
@@ -52,6 +53,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 #toolbar button.gold{background:rgba(245,200,66,.18);border-color:rgba(245,200,66,.4);color:var(--accent);}
 #toolbar .icon{font-size:15px;flex-shrink:0;}
 #toolbar hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin:5px 0;}
+
+/* align buttons row */
+.align-row{display:flex;gap:4px;width:100%;}
+.align-row button{
+  flex:1;padding:7px 4px;justify-content:center;font-size:13px;
+}
+.align-row button.active{
+  background:rgba(245,200,66,.25);border-color:rgba(245,200,66,.6);color:var(--accent);
+}
 
 /* auto-save indicator */
 #autosave-badge{
@@ -191,19 +201,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 }
 .del-btn:hover{color:var(--red);background:#fee2e2;}
 
-/* images */
-.img-cell{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+/* ── IMÁGENES — más grandes en pantalla ── */
+.img-cell{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .img-thumb{position:relative;}
-.img-thumb img{width:48px;height:48px;object-fit:cover;border-radius:5px;border:1px solid var(--border);display:block;}
+.img-thumb img{
+  width:72px;height:72px;   /* ← antes 48×48, ahora 72×72 */
+  object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block;
+}
 .del-img{
-  position:absolute;top:-4px;right:-4px;width:15px;height:15px;
+  position:absolute;top:-4px;right:-4px;width:16px;height:16px;
   background:var(--red);color:#fff;border:none;border-radius:50%;
   font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
 }
 .add-img-btn{
-  width:48px;height:48px;border:2px dashed var(--border);border-radius:5px;
+  width:72px;height:72px;   /* ← igual que las thumbs */
+  border:2px dashed var(--border);border-radius:6px;
   background:var(--bg);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--muted);font-size:18px;
+  cursor:pointer;color:var(--muted);font-size:22px;
   transition:border-color var(--transition),color var(--transition),background var(--transition);
 }
 .add-img-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
@@ -275,10 +289,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .page-footer-inner:hover,.page-footer-inner:focus{background:var(--green-light);color:var(--ink);}
 
 /* ══════════════════════════════════════════
-   PRINT STYLES — mejorado
+   PRINT STYLES
    ══════════════════════════════════════════ */
 @media print {
-  @page { margin: 1cm 1.2cm; size: A4; }
+  @page {
+    margin: 1cm 1.2cm;
+    size: A4;
+    /* Suprimir encabezado/pie de página del navegador (URL, fecha, nº página) */
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Eliminar cualquier "running header/footer" del navegador */
+  @page :first { margin-top: 1cm; }
 
   *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
@@ -303,7 +325,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     width: 100% !important;
   }
 
-  /* ── TABLA: no repetir encabezado ── */
+  /* ── TABLA ── */
   #quote-table {
     width: 100% !important;
     table-layout: fixed !important;
@@ -312,36 +334,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     border-collapse: collapse !important;
   }
 
-  /* El thead NO se repite al saltar de página */
   #quote-table thead {
     display: table-row-group !important;
   }
 
-  /* ── ANCHOS DE COLUMNA para A4 ──
-     Total útil ≈ 190mm.
-     Part  : 20pt  (≈7mm)
-     Cant  : 24pt  (≈8.5mm)
-     Uni   : 28pt  (≈10mm)
-     Concepto: AUTO → ocupa el espacio restante (~75mm)
-     Imagen: 52pt  (≈18mm)
-     P.U.  : 46pt  (≈16mm)
-     Importe: 52pt (≈18mm)
-  */
+  /* Anchos de columna para A4 (~190mm útiles) */
   #quote-table thead tr th:nth-child(1) { width: 20pt !important; }
   #quote-table thead tr th:nth-child(2) { width: 24pt !important; }
   #quote-table thead tr th:nth-child(3) { width: 28pt !important; }
-  #quote-table thead tr th:nth-child(4) { width: auto !important; }   /* Concepto — toma todo lo restante */
-  #quote-table thead tr th:nth-child(5) { width: 52pt !important; }
+  #quote-table thead tr th:nth-child(4) { width: auto !important; }
+  #quote-table thead tr th:nth-child(5) { width: 64pt !important; }  /* col imagen — más ancha */
   #quote-table thead tr th:nth-child(6) { width: 46pt !important; }
   #quote-table thead tr th:nth-child(7) { width: 52pt !important; }
 
-  /* celdas sin min-width que desborden */
   #quote-table td, #quote-table th {
     min-width: 0 !important;
     padding: 5pt 5pt !important;
+    overflow: hidden !important;
   }
 
-  /* Concepto: texto largo que hace wrap */
   .cell-edit {
     word-break: break-word !important;
     white-space: normal !important;
@@ -353,25 +364,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     font-size: 8pt !important;
   }
 
-  /* ── IMÁGENES MÁS GRANDES en impresión ── */
-  .img-thumb img {
-    width: 60pt !important;
-    height: 60pt !important;
-    object-fit: cover !important;
-  }
-
+  /* ── IMÁGENES EN IMPRESIÓN — contener dentro de la celda ── */
   .img-cell {
     gap: 3pt !important;
+    flex-wrap: wrap !important;
+    max-width: 60pt !important;   /* no puede exceder la columna */
+    overflow: hidden !important;
+  }
+  .img-thumb img {
+    width: 56pt !important;
+    height: 56pt !important;
+    max-width: 56pt !important;
+    object-fit: cover !important;
+    display: block !important;
   }
 
-  /* Filas: evitar cortes de página en medio */
+  /* Filas */
   .row-item { page-break-inside: avoid; }
   .row-section { page-break-after: avoid; }
 
-  /* Secciones del documento: evitar cortes */
+  /* Secciones */
   .doc-header, .subtotals-wrap, .terms-wrap, .doc-footer { page-break-inside: avoid; }
 
-  /* eliminar interactividad visual */
+  /* Limpiar interactividad visual */
   .cell-edit:hover, .cell-edit:focus,
   .terms-body:hover, .terms-body:focus,
   .footer-address:hover, .footer-address:focus,
@@ -391,7 +406,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     font-size: 8pt !important;
   }
 
-  /* padding de secciones ajustado */
+  /* Padding de secciones */
   .doc-header     { padding: 12pt 14pt 10pt !important; }
   .table-wrap     { padding: 0 14pt 10pt !important; overflow: visible !important; }
   .subtotals-wrap { padding: 0 14pt 10pt !important; }
@@ -415,6 +430,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   <div class="tlabel">Formato</div>
   <button onclick="document.execCommand('bold')"><span class="icon">𝐁</span> Negritas</button>
   <button onclick="document.execCommand('italic')"><span class="icon"><i>I</i></span> Cursiva</button>
+
+  <!-- ALINEACIÓN DE TEXTO -->
+  <div class="tlabel">Alineación</div>
+  <div class="align-row">
+    <button id="btn-align-left"    title="Izquierda" onclick="setAlign('left')"    class="icon">⬅</button>
+    <button id="btn-align-center"  title="Centrado"  onclick="setAlign('center')"  class="icon">↔</button>
+    <button id="btn-align-right"   title="Derecha"   onclick="setAlign('right')"   class="icon">➡</button>
+    <button id="btn-align-justify" title="Justificado" onclick="setAlign('justify')" style="font-size:11px;">≡</button>
+  </div>
 
   <hr>
   <div class="tlabel">Estructura</div>
@@ -512,7 +536,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
           <th style="width:40px">Cant.</th>
           <th style="width:62px">Uni.</th>
           <th>Concepto / Descripción</th>
-          <th style="width:90px">Imagen</th>
+          <th style="width:110px">Imagen</th>
           <th style="width:76px">P.U.</th>
           <th style="width:86px">Importe</th>
           <th style="width:26px" class="no-print"></th>
@@ -644,6 +668,40 @@ function checkPlaceholder(el) {
     el.innerHTML = `<span class="placeholder-hint">${el.getAttribute('data-placeholder')}</span>`;
   }
 }
+
+// ═══════════════════════════════════════════
+//  ALINEACIÓN DE TEXTO
+// ═══════════════════════════════════════════
+const ALIGN_CMDS = {
+  left:    'justifyLeft',
+  center:  'justifyCenter',
+  right:   'justifyRight',
+  justify: 'justifyFull'
+};
+
+function setAlign(dir) {
+  document.execCommand(ALIGN_CMDS[dir]);
+  // Marcar botón activo visualmente
+  ['left','center','right','justify'].forEach(d => {
+    const b = document.getElementById('btn-align-' + d);
+    if (b) b.classList.toggle('active', d === dir);
+  });
+  scheduleSave();
+}
+
+// Actualizar estado de botones al mover el cursor
+document.addEventListener('selectionchange', () => {
+  const map = {
+    left:    document.queryCommandState('justifyLeft'),
+    center:  document.queryCommandState('justifyCenter'),
+    right:   document.queryCommandState('justifyRight'),
+    justify: document.queryCommandState('justifyFull'),
+  };
+  Object.entries(map).forEach(([d, active]) => {
+    const b = document.getElementById('btn-align-' + d);
+    if (b) b.classList.toggle('active', active);
+  });
+});
 
 // ═══════════════════════════════════════════
 //  SECTIONS & ITEMS
