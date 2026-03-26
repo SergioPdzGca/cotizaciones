@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotización — DIMCER</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:      #1d7a3c;
+  --green-light:#e8f5ed;
+  --green-mid:  #a3d4b4;
+  --green-dark: #0f4a23;
+  --accent:     #f5c842;
+  --ink:        #111;
+  --muted:      #6b7280;
+  --border:     #d1d5db;
+  --bg:         #f4f6f3;
+  --white:      #ffffff;
+  --red:        #dc2626;
+  --radius:     10px;
+  --transition: .18s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+
+/* ── SIDEBAR ── */
+#toolbar{
+  position:fixed;top:0;left:0;width:220px;height:100vh;
+  background:var(--green-dark);padding:24px 16px;
+  display:flex;flex-direction:column;gap:7px;z-index:100;
+  box-shadow:4px 0 24px rgba(0,0,0,.2);overflow-y:auto;
+}
+#toolbar .brand{
+  font-family:'Playfair Display',serif;color:var(--accent);
+  font-size:17px;font-weight:900;letter-spacing:.04em;
+  margin-bottom:14px;padding-bottom:14px;
+  border-bottom:1px solid rgba(255,255,255,.12);line-height:1.3;
+}
+#toolbar .brand small{display:block;font-size:10px;font-weight:300;color:var(--green-mid);font-family:'DM Sans',sans-serif;margin-top:3px;}
+#toolbar .tlabel{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--green-mid);margin-top:8px;margin-bottom:2px;}
+#toolbar button{
+  display:flex;align-items:center;gap:8px;width:100%;
+  padding:9px 13px;background:rgba(255,255,255,.07);color:#fff;
+  border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;
+  cursor:pointer;transition:background var(--transition),transform var(--transition);
+}
+#toolbar button:hover{background:rgba(255,255,255,.16);transform:translateX(2px);}
+#toolbar button.primary{background:var(--green);border-color:var(--green);}
+#toolbar button.primary:hover{background:#25a04d;}
+#toolbar button.gold{background:rgba(245,200,66,.18);border-color:rgba(245,200,66,.4);color:var(--accent);}
+#toolbar .icon{font-size:15px;flex-shrink:0;}
+#toolbar hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin:5px 0;}
+
+/* auto-save indicator */
+#autosave-badge{
+  margin-top:auto;padding-top:10px;
+  font-size:9px;color:var(--green-mid);
+  text-align:center;line-height:1.5;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+#autosave-badge .dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--green-mid);margin-right:4px;vertical-align:middle;
+  transition:background .3s;
+}
+#autosave-badge .dot.saving{background:var(--accent);}
+#autosave-badge .dot.saved{background:#4ade80;}
+
+/* ── WRAPPER ── */
+#wrapper{margin-left:220px;padding:28px 32px 60px;display:flex;flex-direction:column;align-items:center;}
+
+/* ── PAPER ── */
+.paper{
+  width:100%;max-width:1100px;background:var(--white);
+  border-radius:14px;box-shadow:0 4px 40px rgba(0,0,0,.1);overflow:hidden;
+}
+
+/* ── HEADER ── */
+.doc-header{
+  display:grid;grid-template-columns:1fr auto;gap:20px;
+  padding:24px 32px 18px;border-bottom:2px solid var(--green-light);align-items:start;
+}
+.logo-zone{
+  width:230px;height:82px;border:2px dashed var(--border);border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;overflow:hidden;background:var(--bg);
+  transition:border-color var(--transition),background var(--transition);position:relative;
+}
+.logo-zone:hover{border-color:var(--green);background:var(--green-light);}
+.logo-zone img{width:100%;height:100%;object-fit:contain;}
+.logo-hint{font-size:10px;color:var(--muted);text-align:center;line-height:1.5;pointer-events:none;}
+.logo-hint span{display:block;font-size:20px;margin-bottom:2px;}
+
+.editable-subtle{
+  outline:none;border-bottom:1px dashed transparent;
+  transition:border-color var(--transition),background var(--transition);
+  padding:2px 4px;border-radius:4px;
+}
+.editable-subtle:hover,.editable-subtle:focus{
+  border-bottom-color:var(--green);background:var(--green-light);
+}
+.placeholder-hint{color:var(--muted);font-style:italic;}
+
+.header-right{text-align:right;}
+.quote-word{
+  font-family:'Playfair Display',serif;font-size:34px;font-weight:900;
+  color:var(--green);letter-spacing:.02em;line-height:1;
+}
+.meta-box{
+  margin-top:10px;border:2px solid var(--green);border-radius:var(--radius);
+  overflow:hidden;min-width:210px;
+}
+.meta-row{display:grid;grid-template-columns:80px 1fr;font-size:10.5px;}
+.meta-row+.meta-row{border-top:1px solid var(--green-light);}
+.meta-key{
+  background:var(--green-light);color:var(--green-dark);font-weight:700;
+  padding:6px 10px;display:flex;align-items:center;
+  font-size:9px;text-transform:uppercase;letter-spacing:.07em;
+}
+.meta-val{
+  padding:6px 10px;outline:none;font-family:'DM Mono',monospace;font-size:10.5px;
+  transition:background var(--transition);
+}
+.meta-val:hover,.meta-val:focus{background:var(--green-light);}
+
+/* ── CLIENT ── */
+.client-bar{
+  background:var(--green);color:#fff;padding:6px 32px;
+  font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+}
+.client-info{
+  padding:12px 32px 14px;font-size:11.5px;line-height:1.8;outline:none;
+  border-bottom:2px solid var(--green-light);min-height:64px;
+  transition:background var(--transition);
+}
+.client-info:hover,.client-info:focus{background:var(--green-light);}
+
+/* ── INTRO ── */
+.intro-text{
+  padding:10px 32px 8px;font-size:11px;color:#374151;outline:none;
+  line-height:1.6;transition:background var(--transition);border-bottom:1px solid var(--green-light);
+  min-height:36px;
+}
+.intro-text:hover,.intro-text:focus{background:var(--green-light);}
+
+/* ── TABLE ── */
+.table-wrap{padding:0 32px 20px;}
+#quote-table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  margin-top:16px;border:1.5px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
+#quote-table thead tr th{
+  background:var(--green-dark);color:#fff;
+  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:9px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.12);
+}
+#quote-table thead tr th:last-child{border-right:none;}
+#quote-table td{
+  padding:7px 8px;font-size:10.5px;vertical-align:top;
+  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+}
+#quote-table td:last-child{border-right:none;}
+.row-item:hover{background:#fafffe;}
+.row-section td{
+  background:linear-gradient(90deg,var(--green-light) 0%,#f0faf4 100%);
+  font-weight:700;font-size:10.5px;color:var(--green-dark);
+  padding:8px 14px;letter-spacing:.04em;
+}
+.cell-edit{
+  outline:none;min-height:18px;width:100%;display:block;
+  line-height:1.5;border-radius:4px;padding:2px 4px;
+  transition:background var(--transition);
+}
+.cell-edit:hover,.cell-edit:focus{background:var(--green-light);}
+.cell-num{text-align:center;font-family:'DM Mono',monospace;color:var(--muted);font-size:9.5px;font-weight:600;}
+.cell-money{text-align:right;font-family:'DM Mono',monospace;font-size:10.5px;font-weight:700;color:var(--green-dark);white-space:nowrap;}
+
+.add-row-btn{
+  background:none;border:none;color:var(--green);font-size:11px;font-weight:600;
+  cursor:pointer;padding:9px 14px;display:flex;align-items:center;gap:5px;
+  width:100%;transition:background var(--transition);border-radius:6px;
+}
+.add-row-btn:hover{background:var(--green-light);}
+.del-btn{
+  background:none;border:none;color:var(--border);cursor:pointer;
+  font-size:14px;padding:2px 5px;border-radius:4px;
+  transition:color var(--transition),background var(--transition);line-height:1;
+}
+.del-btn:hover{color:var(--red);background:#fee2e2;}
+
+/* images */
+.img-cell{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+.img-thumb{position:relative;}
+.img-thumb img{width:48px;height:48px;object-fit:cover;border-radius:5px;border:1px solid var(--border);display:block;}
+.del-img{
+  position:absolute;top:-4px;right:-4px;width:15px;height:15px;
+  background:var(--red);color:#fff;border:none;border-radius:50%;
+  font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.add-img-btn{
+  width:48px;height:48px;border:2px dashed var(--border);border-radius:5px;
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);font-size:18px;
+  transition:border-color var(--transition),color var(--transition),background var(--transition);
+}
+.add-img-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
+
+/* ── SUBTOTALS ── */
+.subtotals-wrap{display:flex;justify-content:flex-end;padding:0 32px 20px;}
+.subtotals-box{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;min-width:260px;font-size:11px;}
+.sub-row{display:grid;grid-template-columns:1fr auto;padding:8px 14px;border-bottom:1px solid var(--border);}
+.sub-row:last-child{border-bottom:none;}
+.sub-row.total-row{background:var(--green-dark);color:#fff;}
+.sub-row .s-label{font-weight:600;color:var(--muted);}
+.sub-row.total-row .s-label{color:var(--green-mid);font-size:9px;text-transform:uppercase;letter-spacing:.1em;align-self:center;}
+.sub-row .s-val{font-family:'DM Mono',monospace;font-weight:700;text-align:right;}
+.sub-row.total-row .s-val{font-size:18px;color:var(--accent);}
+.iva-toggle{display:flex;align-items:center;gap:6px;padding:7px 14px 8px;font-size:10px;color:var(--muted);cursor:pointer;border-bottom:1px solid var(--border);}
+.iva-toggle input{accent-color:var(--green);cursor:pointer;}
+
+/* ── TERMS ── */
+.terms-wrap{padding:0 32px 22px;}
+.terms-head{background:var(--green);color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:var(--radius) var(--radius) 0 0;}
+.terms-body{border:1.5px solid var(--green);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:12px 16px;font-size:10px;line-height:1.6;color:#374151;outline:none;}
+.terms-body:hover,.terms-body:focus{background:var(--green-light);}
+.terms-body ol{padding-left:18px;}
+.terms-body li{margin-bottom:4px;text-align:justify;}
+
+/* ── FOOTER ── */
+.doc-footer{padding:16px 32px 28px;border-top:2px solid var(--green-light);}
+.footer-address{font-size:10px;color:var(--muted);line-height:1.6;outline:none;border-radius:6px;padding:4px 6px;transition:background var(--transition);margin-bottom:24px;}
+.footer-address:hover,.footer-address:focus{background:var(--green-light);color:var(--ink);}
+.sig-area{text-align:center;}
+.sig-cross{font-size:12px;color:var(--muted);margin-bottom:5px;}
+.sig-line{width:280px;border-top:2px solid var(--ink);margin:0 auto 5px;padding-top:5px;font-size:10px;font-weight:600;color:var(--ink);}
+.thanks-note{margin-top:18px;font-size:10.5px;color:var(--muted);line-height:1.6;outline:none;border-radius:6px;padding:4px 8px;transition:background var(--transition);}
+.thanks-note:hover,.thanks-note:focus{background:var(--green-light);color:var(--ink);}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;background:var(--green-dark);color:#fff;
+  padding:11px 18px;border-radius:var(--radius);font-size:12px;font-weight:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;
+  transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;
+}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── UNIT SELECT ── */
+.uni-select{
+  width:100%;border:none;outline:none;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:10.5px;
+  color:var(--ink);text-align:center;cursor:pointer;
+  padding:2px 2px;border-radius:4px;
+  -webkit-appearance:none;appearance:none;
+  transition:background var(--transition);
+}
+.uni-select:hover,.uni-select:focus{background:var(--green-light);}
+
+/* ── PAGE FOOTER (pie de página) ── */
+.page-footer{
+  margin-top:2px;
+  border-top:2px solid var(--green);
+  padding:8px 32px 10px;
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;
+}
+.page-footer-inner{
+  font-size:9.5px;color:var(--muted);line-height:1.5;
+  outline:none;text-align:center;border-radius:4px;padding:3px 8px;
+  transition:background var(--transition);flex:1;max-width:700px;
+}
+.page-footer-inner:hover,.page-footer-inner:focus{background:var(--green-light);color:var(--ink);}
+
+/* ══════════════════════════════════════════
+   PRINT STYLES — mejorado
+   ══════════════════════════════════════════ */
+@media print {
+  @page { margin: 1cm 1.2cm; size: A4; }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ocultar elementos de UI */
+  #toolbar, .no-print { display: none !important; }
+
+  body { background: white !important; }
+
+  #wrapper {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .paper {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* ── TABLA: no repetir encabezado ── */
+  #quote-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    font-size: 8.5pt !important;
+    border-radius: 0 !important;
+    border-collapse: collapse !important;
+  }
+
+  /* El thead NO se repite al saltar de página */
+  #quote-table thead {
+    display: table-row-group !important;
+  }
+
+  /* ── ANCHOS DE COLUMNA para A4 ──
+     Total útil ≈ 190mm.
+     Part  : 20pt  (≈7mm)
+     Cant  : 24pt  (≈8.5mm)
+     Uni   : 28pt  (≈10mm)
+     Concepto: AUTO → ocupa el espacio restante (~75mm)
+     Imagen: 52pt  (≈18mm)
+     P.U.  : 46pt  (≈16mm)
+     Importe: 52pt (≈18mm)
+  */
+  #quote-table thead tr th:nth-child(1) { width: 20pt !important; }
+  #quote-table thead tr th:nth-child(2) { width: 24pt !important; }
+  #quote-table thead tr th:nth-child(3) { width: 28pt !important; }
+  #quote-table thead tr th:nth-child(4) { width: auto !important; }   /* Concepto — toma todo lo restante */
+  #quote-table thead tr th:nth-child(5) { width: 52pt !important; }
+  #quote-table thead tr th:nth-child(6) { width: 46pt !important; }
+  #quote-table thead tr th:nth-child(7) { width: 52pt !important; }
+
+  /* celdas sin min-width que desborden */
+  #quote-table td, #quote-table th {
+    min-width: 0 !important;
+    padding: 5pt 5pt !important;
+  }
+
+  /* Concepto: texto largo que hace wrap */
+  .cell-edit {
+    word-break: break-word !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .cell-money {
+    white-space: nowrap !important;
+    font-size: 8pt !important;
+  }
+
+  /* ── IMÁGENES MÁS GRANDES en impresión ── */
+  .img-thumb img {
+    width: 60pt !important;
+    height: 60pt !important;
+    object-fit: cover !important;
+  }
+
+  .img-cell {
+    gap: 3pt !important;
+  }
+
+  /* Filas: evitar cortes de página en medio */
+  .row-item { page-break-inside: avoid; }
+  .row-section { page-break-after: avoid; }
+
+  /* Secciones del documento: evitar cortes */
+  .doc-header, .subtotals-wrap, .terms-wrap, .doc-footer { page-break-inside: avoid; }
+
+  /* eliminar interactividad visual */
+  .cell-edit:hover, .cell-edit:focus,
+  .terms-body:hover, .terms-body:focus,
+  .footer-address:hover, .footer-address:focus,
+  .thanks-note:hover, .thanks-note:focus,
+  .client-info:hover, .client-info:focus,
+  .meta-val:hover, .meta-val:focus,
+  .intro-text:hover, .intro-text:focus,
+  .editable-subtle:hover, .editable-subtle:focus { background: transparent !important; }
+
+  .logo-zone { border: none !important; background: transparent !important; }
+  .add-row-btn, .del-btn, .add-img-btn, .del-img { display: none !important; }
+
+  .uni-select {
+    -webkit-appearance: none !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 8pt !important;
+  }
+
+  /* padding de secciones ajustado */
+  .doc-header     { padding: 12pt 14pt 10pt !important; }
+  .table-wrap     { padding: 0 14pt 10pt !important; overflow: visible !important; }
+  .subtotals-wrap { padding: 0 14pt 10pt !important; }
+  .terms-wrap     { padding: 0 14pt 12pt !important; }
+  .doc-footer     { padding: 8pt 14pt 14pt !important; }
+  .client-info    { padding: 6pt 14pt 8pt !important; }
+  .intro-text     { padding: 5pt 14pt !important; }
+  .client-bar     { padding: 4pt 14pt !important; }
+  .page-footer    { padding: 5pt 14pt 7pt !important; }
+  .page-footer-inner { font-size: 7pt !important; color: #555 !important; }
+  .placeholder-hint { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="toolbar" class="no-print">
+  <div class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>
+
+  <div class="tlabel">Formato</div>
+  <button onclick="document.execCommand('bold')"><span class="icon">𝐁</span> Negritas</button>
+  <button onclick="document.execCommand('italic')"><span class="icon"><i>I</i></span> Cursiva</button>
+
+  <hr>
+  <div class="tlabel">Estructura</div>
+  <button onclick="addSection()" class="primary"><span class="icon">＋</span> Nueva Sección</button>
+
+  <hr>
+  <div class="tlabel">Logo</div>
+  <button onclick="document.getElementById('file-logo').click()" class="primary">
+    <span class="icon">🖼</span> Cargar Logo
+  </button>
+  <button onclick="clearLogo()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
+    <span class="icon">✕</span> Quitar Logo
+  </button>
+  <input type="file" id="file-logo" style="display:none" accept="image/*" onchange="loadLogo(this)">
+
+  <hr>
+  <div class="tlabel">Documento</div>
+  <button onclick="window.print()" class="primary"><span class="icon">🖨</span> Crear PDF</button>
+  <button onclick="saveJSON()" class="gold"><span class="icon">💾</span> Exportar JSON</button>
+  <button onclick="document.getElementById('load-json').click()"><span class="icon">📂</span> Importar JSON</button>
+  <input type="file" id="load-json" style="display:none" accept=".json" onchange="loadJSON(this)">
+
+  <hr>
+  <div class="tlabel">Auto-guardado</div>
+  <button onclick="manualSave()" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:#4ade80;">
+    <span class="icon">💚</span> Guardar ahora
+  </button>
+  <button onclick="clearSaved()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
+    <span class="icon">🗑</span> Limpiar guardado
+  </button>
+
+  <div id="autosave-badge">
+    <div><span class="dot" id="save-dot"></span><span id="save-label">Sin cambios</span></div>
+    <div id="save-time" style="margin-top:2px;opacity:.6;"></div>
+  </div>
+</nav>
+
+<!-- PAPER -->
+<div id="wrapper">
+<div class="paper">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div>
+      <div class="logo-zone" id="logo-zone" onclick="document.getElementById('file-logo').click()" title="Clic para cargar logo">
+        <div class="logo-hint" id="logo-hint"><span>🖼️</span>Clic para cargar logo</div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="editable-subtle" id="company-info" contenteditable="true" spellcheck="false"
+          style="font-size:10px;color:var(--muted);line-height:1.7;"
+          data-placeholder="Dirección, teléfono, web, email..."></div>
+      </div>
+      <div class="editable-subtle" id="advisor-name" contenteditable="true" spellcheck="false"
+        style="font-size:11px;font-weight:600;margin-top:6px;"
+        data-placeholder="Asesor de venta: Nombre del asesor"></div>
+    </div>
+    <div class="header-right">
+      <div class="quote-word">COTIZACIÓN</div>
+      <div class="meta-box">
+        <div class="meta-row">
+          <div class="meta-key">N°.</div>
+          <div class="meta-val" id="meta-num" contenteditable="true" spellcheck="false"></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-key">Fecha</div>
+          <div class="meta-val" id="meta-fecha" contenteditable="true" spellcheck="false"></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-key">Cliente ID</div>
+          <div class="meta-val" id="meta-cliente-id" contenteditable="true" spellcheck="false"></div>
+        </div>
+        <div class="meta-row">
+          <div class="meta-key">Válido Hasta</div>
+          <div class="meta-val" id="meta-valid" contenteditable="true" spellcheck="false"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT -->
+  <div class="client-bar">👤 Cliente</div>
+  <div class="client-info" id="client-info" contenteditable="true" spellcheck="false"
+    data-placeholder="Nombre del cliente, dirección, ciudad..."></div>
+
+  <!-- INTRO -->
+  <div class="intro-text" id="intro-text" contenteditable="true" spellcheck="false"
+    data-placeholder="Texto introductorio de la cotización (opcional)..."></div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table id="quote-table">
+      <thead>
+        <tr>
+          <th style="width:36px">Part.</th>
+          <th style="width:40px">Cant.</th>
+          <th style="width:62px">Uni.</th>
+          <th>Concepto / Descripción</th>
+          <th style="width:90px">Imagen</th>
+          <th style="width:76px">P.U.</th>
+          <th style="width:86px">Importe</th>
+          <th style="width:26px" class="no-print"></th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+    <div id="empty-hint" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">
+      Haz clic en <strong style="color:var(--green);">+ Nueva Sección</strong> en el panel izquierdo para comenzar.
+    </div>
+  </div>
+
+  <!-- SUBTOTALS -->
+  <div class="subtotals-wrap">
+    <div class="subtotals-box">
+      <label class="iva-toggle no-print">
+        <input type="checkbox" id="iva-check" onchange="calcTotal(); scheduleSave();">
+        Incluir IVA (16%)
+      </label>
+      <div class="sub-row">
+        <span class="s-label">Subtotal</span>
+        <span class="s-val" id="sub-total">$ 0.00</span>
+      </div>
+      <div class="sub-row" id="iva-row" style="display:none">
+        <span class="s-label">IVA 16%</span>
+        <span class="s-val" id="iva-val">$ 0.00</span>
+      </div>
+      <div class="sub-row total-row">
+        <span class="s-label">Total (MXN)</span>
+        <span class="s-val" id="grand-total">$ 0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMS -->
+  <div class="terms-wrap">
+    <div class="terms-head">📋 Términos y Condiciones</div>
+    <div class="terms-body" id="terms-body" contenteditable="true" spellcheck="false">
+      <ol>
+        <li>Cotización en moneda nacional.</li>
+        <li>Precio NO incluye IVA. En caso de requerir factura, notificarlo al número o correo electrónico estipulado en este documento y se aumentará el 16% del costo final del proyecto.</li>
+        <li>En caso de requerir trabajos extras de esta cotización, se cargará al momento del cobro.</li>
+        <li>Se solicita el 60% de anticipo al aprobar el proyecto.</li>
+        <li>Tiempo de ejecución de acuerdo a la obra.</li>
+        <li>Garantía de equipos instalados 24 meses a partir de la fecha de entrega.</li>
+        <li>Tiempo de entrega de equipos de 3 a 15 días después del primer pago, dependiendo de la disponibilidad en almacenes.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-address editable-subtle" id="footer-address" contenteditable="true" spellcheck="false"
+      data-placeholder="Dirección, teléfono, correo..."></div>
+    <div class="sig-area" style="margin-top:20px;">
+      <div class="sig-cross">✕ ___________________________________________</div>
+      <div class="sig-line">Nombre y Firma del Cliente</div>
+      <div class="thanks-note" contenteditable="true" spellcheck="false">
+        Si usted tiene alguna duda sobre esta cotización, por favor póngase en contacto con nosotros a los números que aparecen al inicio, o visítenos en nuestras oficinas.<br>
+        <strong><em>¡Gracias por hacer negocios con nosotros!</em></strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA -->
+  <div class="page-footer">
+    <div class="page-footer-inner" id="page-footer-text" contenteditable="true" spellcheck="false"
+      data-placeholder="Pie de página — escribe aquí información adicional, aviso legal, redes sociales..."></div>
+  </div>
+
+</div><!-- /paper -->
+</div><!-- /wrapper -->
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+let quoteData = [];
+let saveTimer = null;
+let isDirty   = false;
+
+// ═══════════════════════════════════════════
+//  LOGO
+// ═══════════════════════════════════════════
+function loadLogo(input) {
+  if (!input.files || !input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    applyLogo(e.target.result);
+    try { localStorage.setItem('dimcer_logo', e.target.result); } catch(ex){}
+    toast('✅ Logo guardado');
+    scheduleSave();
+  };
+  r.readAsDataURL(input.files[0]);
+}
+function applyLogo(src) {
+  const zone = document.getElementById('logo-zone');
+  let img = zone.querySelector('img');
+  if (!img) { img = document.createElement('img'); zone.appendChild(img); }
+  img.src = src;
+  document.getElementById('logo-hint').style.display = 'none';
+}
+function clearLogo() {
+  const zone = document.getElementById('logo-zone');
+  const img = zone.querySelector('img');
+  if (img) img.remove();
+  document.getElementById('logo-hint').style.display = '';
+  try { localStorage.removeItem('dimcer_logo'); } catch(ex){}
+  toast('Logo eliminado');
+  scheduleSave();
+}
+
+// ═══════════════════════════════════════════
+//  PLACEHOLDER BEHAVIOUR
+// ═══════════════════════════════════════════
+function initPlaceholders() {
+  document.querySelectorAll('[data-placeholder]').forEach(el => {
+    checkPlaceholder(el);
+    el.addEventListener('focus',  () => { if(el.querySelector('.placeholder-hint')) el.innerHTML=''; });
+    el.addEventListener('blur',   () => checkPlaceholder(el));
+    el.addEventListener('input',  () => scheduleSave());
+  });
+}
+function checkPlaceholder(el) {
+  const text = el.innerText.trim();
+  if (!text || text === el.getAttribute('data-placeholder')) {
+    el.innerHTML = `<span class="placeholder-hint">${el.getAttribute('data-placeholder')}</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════
+//  SECTIONS & ITEMS
+// ═══════════════════════════════════════════
+function addSection() {
+  const t = prompt('Nombre de la sección:', 'NUEVA SECCIÓN');
+  if (!t) return;
+  quoteData.push({ title: t, items: [] });
+  render();
+  scheduleSave();
+}
+function deleteSection(sIdx) {
+  if (!confirm('¿Eliminar sección "' + quoteData[sIdx].title + '"?')) return;
+  quoteData.splice(sIdx, 1); render(); scheduleSave();
+}
+function addItem(sIdx) {
+  quoteData[sIdx].items.push({ cant:1, uni:'PZA', desc:'', pu:0, images:[] });
+  render(); scheduleSave();
+}
+function deleteItem(sIdx, iIdx) {
+  quoteData[sIdx].items.splice(iIdx, 1); render(); scheduleSave();
+}
+
+// ═══════════════════════════════════════════
+//  IMAGES
+// ═══════════════════════════════════════════
+function addImg(input, s, i) {
+  if (!input.files || !input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => { quoteData[s].items[i].images.push(e.target.result); render(); scheduleSave(); };
+  r.readAsDataURL(input.files[0]);
+}
+function delImg(s, i, idx) { quoteData[s].items[i].images.splice(idx,1); render(); scheduleSave(); }
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function render() {
+  const body = document.getElementById('table-body');
+  body.innerHTML = '';
+  const hint = document.getElementById('empty-hint');
+  hint.style.display = quoteData.length === 0 ? 'block' : 'none';
+
+  quoteData.forEach((sec, sIdx) => {
+    // section row
+    const sr = document.createElement('tr');
+    sr.className = 'row-section';
+    sr.innerHTML = `
+      <td colspan="7" style="padding-left:14px;">
+        <span contenteditable="true" spellcheck="false"
+          oninput="quoteData[${sIdx}].title=this.innerText;scheduleSave();"
+          style="outline:none;">${escHtml(sec.title)}</span>
+      </td>
+      <td class="no-print" style="text-align:center;">
+        <button class="del-btn" onclick="deleteSection(${sIdx})" title="Eliminar sección">✕</button>
+      </td>`;
+    body.appendChild(sr);
+
+    sec.items.forEach((item, iIdx) => {
+      const tr = document.createElement('tr');
+      tr.className = 'row-item';
+      const imgs = item.images.map((src,imgIdx) => `
+        <div class="img-thumb">
+          <img src="${src}">
+          <button class="del-img no-print" onclick="delImg(${sIdx},${iIdx},${imgIdx})">✕</button>
+        </div>`).join('');
+      tr.innerHTML = `
+        <td class="cell-num">${sIdx+1}.${iIdx+1}</td>
+        <td style="width:46px;">
+          <div class="cell-edit" contenteditable="true" spellcheck="false"
+            style="text-align:center;font-family:'DM Mono',monospace;font-size:11px;"
+            oninput="updateNum(${sIdx},${iIdx},this,'cant')">${item.cant}</div>
+        </td>
+        <td style="width:62px;">
+          <select class="uni-select" id="uni-${sIdx}-${iIdx}" onchange="quoteData[${sIdx}].items[${iIdx}].uni=this.value;scheduleSave();">
+            <option value="PZA">PZA</option>
+            <option value="PZAS">PZAS</option>
+            <option value="MTRS">MTRS</option>
+            <option value="SERV">SERV</option>
+            <option value="KIT">KIT</option>
+          </select>
+        </td>
+        <td style="">
+          <div class="cell-edit" contenteditable="true" spellcheck="false"
+            oninput="quoteData[${sIdx}].items[${iIdx}].desc=this.innerHTML;scheduleSave();">${item.desc}</div>
+        </td>
+        <td style="width:110px;">
+          <div class="img-cell">
+            ${imgs}
+            <div class="add-img-btn no-print" onclick="document.getElementById('fi-${sIdx}-${iIdx}').click()" title="Agregar foto">＋</div>
+            <input type="file" id="fi-${sIdx}-${iIdx}" style="display:none" accept="image/*" onchange="addImg(this,${sIdx},${iIdx})">
+          </div>
+        </td>
+        <td style="width:82px;">
+          <div class="cell-edit" contenteditable="true" spellcheck="false"
+            style="text-align:right;font-family:'DM Mono',monospace;font-size:10.5px;"
+            oninput="updateNum(${sIdx},${iIdx},this,'pu')">${item.pu}</div>
+        </td>
+        <td class="cell-money" id="t-${sIdx}-${iIdx}">$ 0.00</td>
+        <td class="no-print" style="text-align:center;vertical-align:middle;">
+          <button class="del-btn" onclick="deleteItem(${sIdx},${iIdx})" title="Eliminar">✕</button>
+        </td>`;
+      body.appendChild(tr);
+      calcRow(sIdx, iIdx);
+      // Set select value after DOM insertion
+      const sel = document.getElementById('uni-'+sIdx+'-'+iIdx);
+      if (sel) sel.value = item.uni || 'PZA';
+    });
+
+    const ar = document.createElement('tr');
+    ar.className = 'no-print';
+    ar.innerHTML = `<td colspan="8" style="padding:3px 8px;border-bottom:1px solid var(--border);">
+      <button class="add-row-btn" onclick="addItem(${sIdx})">＋ Agregar concepto</button>
+    </td>`;
+    body.appendChild(ar);
+  });
+
+  calcTotal();
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ═══════════════════════════════════════════
+//  CALC
+// ═══════════════════════════════════════════
+function updateNum(sIdx, iIdx, el, type) {
+  const v = parseFloat(el.innerText.replace(/[^0-9.]/g,'')) || 0;
+  if (type==='cant') quoteData[sIdx].items[iIdx].cant = v;
+  if (type==='pu')   quoteData[sIdx].items[iIdx].pu   = v;
+  calcRow(sIdx, iIdx);
+  calcTotal();
+  scheduleSave();
+}
+function calcRow(sIdx, iIdx) {
+  const it  = quoteData[sIdx].items[iIdx];
+  const cel = document.getElementById(`t-${sIdx}-${iIdx}`);
+  if (cel) cel.innerText = fmt(it.cant * it.pu);
+}
+function calcTotal() {
+  let g = 0;
+  quoteData.forEach(s => s.items.forEach(i => g += i.cant * i.pu));
+  document.getElementById('sub-total').innerText = fmt(g);
+  const useIva = document.getElementById('iva-check').checked;
+  document.getElementById('iva-row').style.display = useIva ? '' : 'none';
+  document.getElementById('iva-val').innerText = fmt(g * 0.16);
+  document.getElementById('grand-total').innerText = fmt(useIva ? g * 1.16 : g);
+}
+function fmt(n) {
+  return '$ ' + n.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+// ═══════════════════════════════════════════
+//  AUTO-SAVE
+// ═══════════════════════════════════════════
+const SAVE_KEY = 'dimcer_cotizacion_autosave';
+
+function collectState() {
+  return {
+    quoteData,
+    iva: document.getElementById('iva-check').checked,
+    fields: {
+      companyInfo:  document.getElementById('company-info').innerHTML,
+      advisorName:  document.getElementById('advisor-name').innerHTML,
+      metaNum:      document.getElementById('meta-num').innerText,
+      metaFecha:    document.getElementById('meta-fecha').innerText,
+      metaClienteId:document.getElementById('meta-cliente-id').innerText,
+      metaValid:    document.getElementById('meta-valid').innerText,
+      clientInfo:   document.getElementById('client-info').innerHTML,
+      introText:    document.getElementById('intro-text').innerHTML,
+      termsBody:    document.getElementById('terms-body').innerHTML,
+      footerAddress:document.getElementById('footer-address').innerHTML,
+      pageFooter:   document.getElementById('page-footer-text').innerHTML,
+    },
+    savedAt: new Date().toISOString()
+  };
+}
+
+function applyState(state) {
+  if (!state) return;
+  quoteData = state.quoteData || [];
+  if (state.iva) document.getElementById('iva-check').checked = true;
+  const f = state.fields || {};
+  if (f.companyInfo)   document.getElementById('company-info').innerHTML   = f.companyInfo;
+  if (f.advisorName)   document.getElementById('advisor-name').innerHTML   = f.advisorName;
+  if (f.metaNum)       document.getElementById('meta-num').innerText       = f.metaNum;
+  if (f.metaFecha)     document.getElementById('meta-fecha').innerText     = f.metaFecha;
+  if (f.metaClienteId) document.getElementById('meta-cliente-id').innerText= f.metaClienteId;
+  if (f.metaValid)     document.getElementById('meta-valid').innerText     = f.metaValid;
+  if (f.clientInfo)    document.getElementById('client-info').innerHTML    = f.clientInfo;
+  if (f.introText)     document.getElementById('intro-text').innerHTML     = f.introText;
+  if (f.termsBody)     document.getElementById('terms-body').innerHTML     = f.termsBody;
+  if (f.footerAddress) document.getElementById('footer-address').innerHTML = f.footerAddress;
+  if (f.pageFooter)    document.getElementById('page-footer-text').innerHTML = f.pageFooter;
+  render();
+}
+
+function scheduleSave() {
+  setSaveDot('saving', 'Guardando...');
+  isDirty = true;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(doSave, 3000);
+}
+
+function doSave() {
+  try {
+    const state = collectState();
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    const t = new Date(state.savedAt);
+    const ts = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    setSaveDot('saved', 'Guardado');
+    document.getElementById('save-time').textContent = ts;
+    isDirty = false;
+  } catch(e) {
+    setSaveDot('', 'Error al guardar');
+  }
+}
+
+function manualSave() {
+  clearTimeout(saveTimer);
+  doSave();
+  toast('💚 Guardado manualmente');
+}
+
+function clearSaved() {
+  if (!confirm('¿Limpiar el auto-guardado y empezar desde cero?')) return;
+  try { localStorage.removeItem(SAVE_KEY); } catch(e){}
+  quoteData = [];
+  render();
+  ['company-info','advisor-name','meta-num','meta-fecha','meta-cliente-id',
+   'meta-valid','client-info','intro-text','footer-address','page-footer-text'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.innerHTML = ''; checkPlaceholder(el); }
+  });
+  setSaveDot('','Sin cambios');
+  document.getElementById('save-time').textContent = '';
+  toast('🗑 Pizarra limpia');
+}
+
+function setSaveDot(state, label) {
+  const dot = document.getElementById('save-dot');
+  const lbl = document.getElementById('save-label');
+  dot.className = 'dot' + (state ? ' ' + state : '');
+  lbl.textContent = label;
+}
+
+window.addEventListener('beforeunload', () => {
+  if (isDirty) doSave();
+});
+
+// ═══════════════════════════════════════════
+//  EXPORT / IMPORT JSON
+// ═══════════════════════════════════════════
+function saveJSON() {
+  const blob = new Blob([JSON.stringify(collectState(),null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'cotizacion_dimcer.json'; a.click();
+  toast('📥 Exportada como JSON');
+}
+function loadJSON(input) {
+  if (!input.files || !input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const state = JSON.parse(e.target.result);
+      applyState(state);
+      toast('✅ Cotización cargada');
+      scheduleSave();
+    } catch { alert('Archivo JSON inválido'); }
+  };
+  r.readAsText(input.files[0]);
+}
+
+// ═══════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  initPlaceholders();
+
+  document.getElementById('page-footer-text').addEventListener('input', scheduleSave);
+  ['meta-num','meta-fecha','meta-cliente-id','meta-valid'].forEach(id => {
+    document.getElementById(id).addEventListener('input', scheduleSave);
+  });
+  document.getElementById('terms-body').addEventListener('input', scheduleSave);
+
+  try {
+    const logo = localStorage.getItem('dimcer_logo');
+    if (logo) applyLogo(logo);
+  } catch(e){}
+
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) {
+      const state = JSON.parse(raw);
+      const t = new Date(state.savedAt);
+      const ts = t.toLocaleString('es-MX');
+      if (confirm(`Se encontró una cotización guardada del ${ts}.\n¿Deseas restaurarla?`)) {
+        applyState(state);
+        setSaveDot('saved','Restaurada');
+        document.getElementById('save-time').textContent = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+        toast('✅ Sesión restaurada');
+        return;
+      }
+    }
+  } catch(e){}
+
+  const hoy   = new Date();
+  const fmtD  = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('meta-fecha').textContent = fmtD(hoy);
+  const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
+  document.getElementById('meta-valid').textContent = fmtD(valid);
+
+  render();
+  setSaveDot('','Sin cambios');
+});
+</script>
+</body>
+</html>
