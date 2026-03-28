@@ -53,41 +53,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 #toolbar .icon{font-size:15px;flex-shrink:0;}
 #toolbar hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin:5px 0;}
 
-/* align buttons row */
 .align-row{display:flex;gap:4px;width:100%;}
-.align-row button{
-  flex:1;padding:7px 4px;justify-content:center;font-size:13px;
-}
-.align-row button.active{
-  background:rgba(245,200,66,.25);border-color:rgba(245,200,66,.6);color:var(--accent);
-}
+.align-row button{flex:1;padding:7px 4px;justify-content:center;font-size:13px;}
+.align-row button.active{background:rgba(245,200,66,.25);border-color:rgba(245,200,66,.6);color:var(--accent);}
 
-/* session badge */
-#session-badge{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:8px;
-  padding:8px 10px;
-  font-size:9.5px;
-  color:var(--green-mid);
-  line-height:1.6;
-}
-#session-badge strong{
-  display:block;
-  font-size:8px;
-  text-transform:uppercase;
-  letter-spacing:.1em;
-  color:rgba(255,255,255,.4);
-  margin-bottom:2px;
-}
-#session-badge .sid{
-  font-family:'DM Mono',monospace;
-  font-size:9px;
-  color:var(--accent);
-  opacity:.7;
-}
-
-/* auto-save indicator */
+/* save indicator */
 #autosave-badge{
   margin-top:auto;padding-top:10px;
   font-size:9px;color:var(--green-mid);
@@ -101,178 +71,87 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 }
 #autosave-badge .dot.saving{background:var(--accent);}
 #autosave-badge .dot.saved{background:#4ade80;}
+#autosave-badge .dot.error{background:#ef4444;}
+
+/* dirty indicator in title bar */
+.dirty-badge{
+  display:inline-block;background:#f59e0b;color:#fff;
+  font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;
+  margin-left:6px;vertical-align:middle;letter-spacing:.04em;
+}
 
 /* ── WRAPPER ── */
 #wrapper{margin-left:220px;padding:28px 32px 60px;display:flex;flex-direction:column;align-items:center;}
 
 /* ── PAPER ── */
-.paper{
-  width:100%;max-width:1100px;background:var(--white);
-  border-radius:14px;box-shadow:0 4px 40px rgba(0,0,0,.1);overflow:hidden;
-}
+.paper{width:100%;max-width:1100px;background:var(--white);border-radius:14px;box-shadow:0 4px 40px rgba(0,0,0,.1);overflow:hidden;}
 
 /* ── HEADER ── */
-.doc-header{
-  display:grid;grid-template-columns:1fr auto;gap:20px;
-  padding:24px 32px 18px;border-bottom:2px solid var(--green-light);align-items:start;
-}
-.logo-zone{
-  width:230px;height:82px;border:2px dashed var(--border);border-radius:var(--radius);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;overflow:hidden;background:var(--bg);
-  transition:border-color var(--transition),background var(--transition);position:relative;
-}
+.doc-header{display:grid;grid-template-columns:1fr auto;gap:20px;padding:24px 32px 18px;border-bottom:2px solid var(--green-light);align-items:start;}
+.logo-zone{width:230px;height:82px;border:2px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:var(--bg);transition:border-color var(--transition),background var(--transition);position:relative;}
 .logo-zone:hover{border-color:var(--green);background:var(--green-light);}
 .logo-zone img{width:100%;height:100%;object-fit:contain;}
 .logo-hint{font-size:10px;color:var(--muted);text-align:center;line-height:1.5;pointer-events:none;}
 .logo-hint span{display:block;font-size:20px;margin-bottom:2px;}
 
-.editable-subtle{
-  outline:none;border-bottom:1px dashed transparent;
-  transition:border-color var(--transition),background var(--transition);
-  padding:2px 4px;border-radius:4px;
-}
-.editable-subtle:hover,.editable-subtle:focus{
-  border-bottom-color:var(--green);background:var(--green-light);
-}
+.editable-subtle{outline:none;border-bottom:1px dashed transparent;transition:border-color var(--transition),background var(--transition);padding:2px 4px;border-radius:4px;}
+.editable-subtle:hover,.editable-subtle:focus{border-bottom-color:var(--green);background:var(--green-light);}
 .placeholder-hint{color:var(--muted);font-style:italic;}
 
 .header-right{text-align:right;}
-.quote-word{
-  font-family:'Playfair Display',serif;font-size:34px;font-weight:900;
-  color:var(--green);letter-spacing:.02em;line-height:1;
-}
-.meta-box{
-  margin-top:10px;border:2px solid var(--green);border-radius:var(--radius);
-  overflow:hidden;min-width:210px;
-}
-.meta-row{display:grid; grid-template-columns: 120px 1fr;font-size:10.5px;}
+.quote-word{font-family:'Playfair Display',serif;font-size:34px;font-weight:900;color:var(--green);letter-spacing:.02em;line-height:1;}
+.meta-box{margin-top:10px;border:2px solid var(--green);border-radius:var(--radius);overflow:hidden;min-width:210px;}
+.meta-row{display:grid;grid-template-columns:120px 1fr;font-size:10.5px;}
 .meta-row+.meta-row{border-top:1px solid var(--green-light);}
-.meta-key{
-  background:var(--green-light);color:var(--green-dark);font-weight:700;
-  padding:6px 10px;display:flex;align-items:center;
-  font-size:9px;text-transform:uppercase;letter-spacing:.07em;
-}
-.meta-val{
-  padding:6px 10px;outline:none;font-family:'DM Mono',monospace;font-size:10.5px;
-  transition:background var(--transition);
-}
+.meta-key{background:var(--green-light);color:var(--green-dark);font-weight:700;padding:6px 10px;display:flex;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;}
+.meta-val{padding:6px 10px;outline:none;font-family:'DM Mono',monospace;font-size:10.5px;transition:background var(--transition);}
 .meta-val:hover,.meta-val:focus{background:var(--green-light);}
 
 /* ── CLIENT ── */
-.client-bar{
-  background:var(--green);color:#fff;padding:6px 32px;
-  font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-}
-.client-info{
-  padding:12px 32px 14px;font-size:11.5px;line-height:1.8;outline:none;
-  border-bottom:2px solid var(--green-light);min-height:64px;
-  transition:background var(--transition);
-}
+.client-bar{background:var(--green);color:#fff;padding:6px 32px;font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;}
+.client-info{padding:12px 32px 14px;font-size:11.5px;line-height:1.8;outline:none;border-bottom:2px solid var(--green-light);min-height:64px;transition:background var(--transition);}
 .client-info:hover,.client-info:focus{background:var(--green-light);}
 
 /* ── INTRO ── */
-.intro-text{
-  padding:10px 32px 8px;font-size:11px;color:#374151;outline:none;
-  line-height:1.6;transition:background var(--transition);border-bottom:1px solid var(--green-light);
-  min-height:36px;
-}
+.intro-text{padding:10px 32px 8px;font-size:11px;color:#374151;outline:none;line-height:1.6;transition:background var(--transition);border-bottom:1px solid var(--green-light);min-height:36px;}
 .intro-text:hover,.intro-text:focus{background:var(--green-light);}
 
 /* ── TABLE ── */
 .table-wrap{padding:0 32px 20px;}
-#quote-table{
-  width:100%;border-collapse:separate;border-spacing:0;
-  margin-top:16px;border:1.5px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;
-}
-#quote-table thead tr th{
-  background:var(--green);color:#fff;
-  font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  padding:9px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.12);
-}
+#quote-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:16px;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+#quote-table thead tr th{background:var(--green);color:#fff;font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:9px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.12);}
 #quote-table thead tr th:last-child{border-right:none;}
-#quote-table td{
-  padding:7px 8px;font-size:10.5px;vertical-align:top;
-  border-right:1px solid var(--border);border-bottom:1px solid var(--border);
-}
+#quote-table td{padding:7px 8px;font-size:10.5px;vertical-align:top;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
 #quote-table td:last-child{border-right:none;}
 .row-item:hover{background:#fafffe;}
-.row-section td{
-  background:linear-gradient(90deg,var(--green-light) 0%,#f0faf4 100%);
-  font-weight:700;font-size:10.5px;color:var(--green-dark);
-  padding:8px 14px;letter-spacing:.04em;
-}
-.cell-edit{
-  outline:none;min-height:18px;width:100%;display:block;
-  line-height:1.5;border-radius:4px;padding:2px 4px;
-  transition:background var(--transition);
-}
+.row-section td{background:linear-gradient(90deg,var(--green-light) 0%,#f0faf4 100%);font-weight:700;font-size:10.5px;color:var(--green-dark);padding:8px 14px;letter-spacing:.04em;}
+.cell-edit{outline:none;min-height:18px;width:100%;display:block;line-height:1.5;border-radius:4px;padding:2px 4px;transition:background var(--transition);}
 .cell-edit:hover,.cell-edit:focus{background:var(--green-light);}
 .cell-num{text-align:center;font-family:'DM Mono',monospace;color:var(--muted);font-size:9.5px;font-weight:600;}
 .cell-money{text-align:right;font-family:'DM Mono',monospace;font-size:10.5px;font-weight:700;color:var(--green-dark);white-space:nowrap;}
 
-.add-row-btn{
-  background:none;border:none;color:var(--green);font-size:11px;font-weight:600;
-  cursor:pointer;padding:9px 14px;display:flex;align-items:center;gap:5px;
-  width:100%;transition:background var(--transition);border-radius:6px;
-}
+.add-row-btn{background:none;border:none;color:var(--green);font-size:11px;font-weight:600;cursor:pointer;padding:9px 14px;display:flex;align-items:center;gap:5px;width:100%;transition:background var(--transition);border-radius:6px;}
 .add-row-btn:hover{background:var(--green-light);}
-.del-btn{
-  background:none;border:none;color:var(--border);cursor:pointer;
-  font-size:14px;padding:2px 5px;border-radius:4px;
-  transition:color var(--transition),background var(--transition);line-height:1;
-}
+.del-btn{background:none;border:none;color:var(--border);cursor:pointer;font-size:14px;padding:2px 5px;border-radius:4px;transition:color var(--transition),background var(--transition);line-height:1;}
 .del-btn:hover{color:var(--red);background:#fee2e2;}
 
 /* ── INSERT ZONE ── */
-.insert-zone{
-  position:relative;height:6px;cursor:pointer;
-  transition:height var(--transition);
-}
+.insert-zone{position:relative;height:6px;cursor:pointer;transition:height var(--transition);}
 .insert-zone:hover{height:22px;}
-.insert-zone::after{
-  content:'';position:absolute;left:0;right:0;top:50%;
-  height:2px;background:transparent;
-  border-top:2px dashed transparent;
-  transition:border-color var(--transition);
-}
+.insert-zone::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:transparent;border-top:2px dashed transparent;transition:border-color var(--transition);}
 .insert-zone:hover::after{border-color:var(--green);}
-.insert-zone .iz-btn{
-  display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  background:var(--green);color:#fff;border:none;border-radius:20px;
-  font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;
-  white-space:nowrap;gap:4px;align-items:center;
-}
+.insert-zone .iz-btn{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--green);color:#fff;border:none;border-radius:20px;font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;white-space:nowrap;gap:4px;align-items:center;}
 .insert-zone:hover .iz-btn{display:flex;}
-.insert-zone .iz-btn-sec{
-  display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  background:var(--green-dark);color:#fff;border:none;border-radius:20px;
-  font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;
-  white-space:nowrap;align-items:center;gap:3px;
-}
+.insert-zone .iz-btn-sec{display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--green-dark);color:#fff;border:none;border-radius:20px;font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;white-space:nowrap;align-items:center;gap:3px;}
 .insert-zone:hover .iz-btn-sec{display:flex;}
 tr.insert-row td{padding:0 !important;border:none !important;background:transparent !important;}
 
-/* ── IMÁGENES ── */
+/* ── IMAGES ── */
 .img-cell{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .img-thumb{position:relative;}
-.img-thumb img{
-  width:72px;height:72px;
-  object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block;
-}
-.del-img{
-  position:absolute;top:-4px;right:-4px;width:16px;height:16px;
-  background:var(--red);color:#fff;border:none;border-radius:50%;
-  font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-}
-.add-img-btn{
-  width:72px;height:72px;
-  border:2px dashed var(--border);border-radius:6px;
-  background:var(--bg);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--muted);font-size:22px;
-  transition:border-color var(--transition),color var(--transition),background var(--transition);
-}
+.img-thumb img{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block;}
+.del-img{position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--red);color:#fff;border:none;border-radius:50%;font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.add-img-btn{width:72px;height:72px;border:2px dashed var(--border);border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:22px;transition:border-color var(--transition),color var(--transition),background var(--transition);}
 .add-img-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-light);}
 
 /* ── SUBTOTALS ── */
@@ -306,187 +185,77 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 .thanks-note{margin-top:18px;font-size:10.5px;color:var(--muted);line-height:1.6;outline:none;border-radius:6px;padding:4px 8px;transition:background var(--transition);}
 .thanks-note:hover,.thanks-note:focus{background:var(--green-light);color:var(--ink);}
 
+/* ── PIE DE PÁGINA ── */
+.page-footer-editor{border-top:2px solid var(--green);padding:10px 32px 14px;background:var(--green-light);display:flex;align-items:flex-start;gap:12px;}
+.page-footer-editor-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--green-dark);white-space:nowrap;padding-top:4px;flex-shrink:0;}
+.page-footer-inner{font-size:9.5px;color:#374151;line-height:1.6;outline:none;border-radius:4px;padding:3px 8px;flex:1;transition:background var(--transition);min-height:22px;border:1px dashed var(--green-mid);background:rgba(255,255,255,.6);}
+.page-footer-inner:hover,.page-footer-inner:focus{background:var(--white);}
+
 /* ── TOAST ── */
-#toast{
-  position:fixed;bottom:24px;right:24px;background:var(--green-dark);color:#fff;
-  padding:11px 18px;border-radius:var(--radius);font-size:12px;font-weight:500;
-  box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;
-  transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;
-}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--green-dark);color:#fff;padding:11px 18px;border-radius:var(--radius);font-size:12px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:999;}
 #toast.show{transform:translateY(0);opacity:1;}
 
 /* ── UNIT SELECT ── */
-.uni-select{
-  width:100%;border:none;outline:none;background:transparent;
-  font-family:'DM Sans',sans-serif;font-size:10.5px;
-  color:var(--ink);text-align:center;cursor:pointer;
-  padding:2px 2px;border-radius:4px;
-  -webkit-appearance:none;appearance:none;
-  transition:background var(--transition);
-}
+.uni-select{width:100%;border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:10.5px;color:var(--ink);text-align:center;cursor:pointer;padding:2px 2px;border-radius:4px;-webkit-appearance:none;appearance:none;transition:background var(--transition);}
 .uni-select:hover,.uni-select:focus{background:var(--green-light);}
 
-/* ── PIE DE PÁGINA EDITABLE ── */
-.page-footer-editor{
-  border-top:2px solid var(--green);
-  padding:10px 32px 14px;
-  background:var(--green-light);
-  display:flex;align-items:flex-start;gap:12px;
-}
-.page-footer-editor-label{
-  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--green-dark);white-space:nowrap;padding-top:4px;flex-shrink:0;
-}
-.page-footer-inner{
-  font-size:9.5px;color:#374151;line-height:1.6;
-  outline:none;border-radius:4px;padding:3px 8px;flex:1;
-  transition:background var(--transition);min-height:22px;
-  border:1px dashed var(--green-mid);background:rgba(255,255,255,.6);
-}
-.page-footer-inner:hover,.page-footer-inner:focus{background:var(--white);}
+/* ── MODAL CLOSE WARNING ── */
+#close-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;}
+#close-modal.visible{display:flex;}
+.close-modal-box{background:#fff;border-radius:16px;padding:32px 36px;max-width:440px;width:90%;box-shadow:0 12px 50px rgba(0,0,0,.3);text-align:center;}
+.close-modal-box h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--green-dark);margin-bottom:10px;}
+.close-modal-box p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:22px;}
+.close-modal-actions{display:flex;flex-direction:column;gap:9px;}
+.close-modal-actions button{padding:11px 20px;border-radius:10px;border:none;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.close-modal-actions button:hover{opacity:.85;}
+.btn-save-json{background:var(--green);color:#fff;}
+.btn-stay{background:var(--green-light);color:var(--green-dark);}
+.btn-leave{background:#fee2e2;color:var(--red);}
 
-/* ── PIE FIJO EN IMPRESIÓN ── */
+/* ── SESSION MANAGER ── */
+#session-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;}
+#session-modal.visible{display:flex;}
+
+/* ── PRINT FIXED FOOTER ── */
 #print-footer-fixed{display:none;}
-@media print{
-  @page{ margin-bottom:2cm; }
-  #print-footer-fixed{
-    display:block !important;
-    position:fixed;
-    bottom:0;left:0;right:0;
-    height:1.6cm;
-    border-top:2pt solid #1d7a3c;
-    background:white;
-    padding:4pt 14pt 0;
-    font-size:7pt;
-    color:#555;
-    line-height:1.5;
-    text-align:center;
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
-  }
-}
 
-/* ══════════════════════════════════════════
-   PRINT STYLES
-   ══════════════════════════════════════════ */
+/* ══════════════ PRINT ══════════════ */
 @media print {
-  @page {
-    margin: 1cm 1.2cm;
-    size: A4;
-    -webkit-print-color-adjust: exact;
-  }
-  @page :first { margin-top: 1cm; }
-  *, *::before, *::after {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-  #toolbar, .no-print { display: none !important; }
-  body { background: white !important; }
-  #wrapper {
-    margin-left: 0 !important;
-    padding: 0 !important;
-    display: block !important;
-  }
-  .paper {
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-  #quote-table {
-    width: 100% !important;
-    table-layout: fixed !important;
-    font-size: 8.5pt !important;
-    border-radius: 0 !important;
-    border-collapse: collapse !important;
-  }
-  #quote-table thead {
-    display: table-row-group !important;
-  }
-  #quote-table thead tr th:nth-child(1) { width: 25pt !important; }
-  #quote-table thead tr th:nth-child(2) { width: 38pt !important; }
-  #quote-table thead tr th:nth-child(3) { width: 28pt !important; }
-  #quote-table thead tr th:nth-child(4) { width: auto !important; }
-  #quote-table thead tr th:nth-child(5) { width: 64pt !important; }
-#quote-table tbody tr td:nth-child(6) {
-  text-align: right !important;
-  font-family: 'DM Mono', monospace !important;
-  white-space: nowrap !important;
-  position: relative;
-  padding-left: 14pt !important;
-  font-variant-numeric: tabular-nums;
-}
-#quote-table tbody tr td:nth-child(6)::before {
-  content: "$";
-  position: absolute;
-  left: 4pt;
-}
-  #quote-table thead tr th:nth-child(6) { width: 60pt !important; }
-#quote-table tbody tr td:nth-child(7) {
-  text-align: right !important;
-  font-family: 'DM Mono', monospace !important;
-  white-space: nowrap !important;
-  font-variant-numeric: tabular-nums;
-  padding-right: 6pt !important;
-}
-  #quote-table td, #quote-table th {
-    min-width: 0 !important;
-    padding: 5pt 5pt !important;
-    overflow: hidden !important;
-  }
-  .cell-edit {
-    word-break: break-word !important;
-    white-space: normal !important;
-    overflow-wrap: break-word !important;
-  }
-  .cell-money {
-    white-space: nowrap !important;
-    font-size: 8pt !important;
-  }
-  .img-cell {
-    gap: 3pt !important;
-    flex-wrap: wrap !important;
-    max-width: 60pt !important;
-    overflow: hidden !important;
-  }
-  .img-thumb img {
-    width: 56pt !important;
-    height: 56pt !important;
-    max-width: 56pt !important;
-    object-fit: cover !important;
-    display: block !important;
-  }
-  .row-item { page-break-inside: avoid; }
-  .row-section { page-break-after: avoid; }
-  .doc-header, .subtotals-wrap, .terms-wrap, .doc-footer { page-break-inside: avoid; }
-  .cell-edit:hover, .cell-edit:focus,
-  .terms-body:hover, .terms-body:focus,
-  .footer-address:hover, .footer-address:focus,
-  .thanks-note:hover, .thanks-note:focus,
-  .client-info:hover, .client-info:focus,
-  .meta-val:hover, .meta-val:focus,
-  .intro-text:hover, .intro-text:focus,
-  .editable-subtle:hover, .editable-subtle:focus { background: transparent !important; }
-  .logo-zone { border: none !important; background: transparent !important; }
-  .add-row-btn, .del-btn, .add-img-btn, .del-img { display: none !important; }
-  .uni-select {
-    -webkit-appearance: none !important;
-    background: transparent !important;
-    border: none !important;
-    font-size: 8pt !important;
-  }
-  .doc-header     { padding: 12pt 14pt 10pt !important; }
-  .table-wrap     { padding: 0 14pt 10pt !important; overflow: visible !important; }
-  .subtotals-wrap { padding: 0 14pt 10pt !important; }
-  .terms-wrap     { padding: 0 14pt 12pt !important; }
-  .doc-footer     { padding: 8pt 14pt 14pt !important; }
-  .client-info    { padding: 6pt 14pt 8pt !important; }
-  .intro-text     { padding: 5pt 14pt !important; }
-  .client-bar     { padding: 4pt 14pt !important; }
-  .page-footer-editor { border-top: 1.5pt solid var(--green) !important; padding: 0 !important; display: none !important; }
-  .page-footer-inner { font-size: 7pt !important; color: #555 !important; }
-  .placeholder-hint { display: none !important; }
-  tr.insert-row { display: none !important; }
+  @page{margin:1cm 1.2cm;size:A4;-webkit-print-color-adjust:exact;}
+  @page :first{margin-top:1cm;}
+  @page{margin-bottom:2cm;}
+  *,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  #toolbar,.no-print{display:none !important;}
+  body{background:white !important;}
+  #wrapper{margin-left:0 !important;padding:0 !important;display:block !important;}
+  .paper{border-radius:0 !important;box-shadow:none !important;max-width:100% !important;width:100% !important;}
+  #quote-table{width:100% !important;table-layout:fixed !important;font-size:8.5pt !important;border-radius:0 !important;border-collapse:collapse !important;}
+  #quote-table thead{display:table-row-group !important;}
+  #quote-table td,#quote-table th{min-width:0 !important;padding:5pt 5pt !important;overflow:hidden !important;}
+  .cell-edit{word-break:break-word !important;white-space:normal !important;overflow-wrap:break-word !important;}
+  .cell-money{white-space:nowrap !important;font-size:8pt !important;}
+  .img-cell{gap:3pt !important;flex-wrap:wrap !important;max-width:60pt !important;overflow:hidden !important;}
+  .img-thumb img{width:56pt !important;height:56pt !important;max-width:56pt !important;object-fit:cover !important;display:block !important;}
+  .row-item{page-break-inside:avoid;}
+  .row-section{page-break-after:avoid;}
+  .doc-header,.subtotals-wrap,.terms-wrap,.doc-footer{page-break-inside:avoid;}
+  .cell-edit:hover,.cell-edit:focus,.terms-body:hover,.terms-body:focus,.footer-address:hover,.footer-address:focus,.thanks-note:hover,.thanks-note:focus,.client-info:hover,.client-info:focus,.meta-val:hover,.meta-val:focus,.intro-text:hover,.intro-text:focus,.editable-subtle:hover,.editable-subtle:focus{background:transparent !important;}
+  .logo-zone{border:none !important;background:transparent !important;}
+  .add-row-btn,.del-btn,.add-img-btn,.del-img{display:none !important;}
+  .uni-select{-webkit-appearance:none !important;background:transparent !important;border:none !important;font-size:8pt !important;}
+  .doc-header{padding:12pt 14pt 10pt !important;}
+  .table-wrap{padding:0 14pt 10pt !important;overflow:visible !important;}
+  .subtotals-wrap{padding:0 14pt 10pt !important;}
+  .terms-wrap{padding:0 14pt 12pt !important;}
+  .doc-footer{padding:8pt 14pt 14pt !important;}
+  .client-info{padding:6pt 14pt 8pt !important;}
+  .intro-text{padding:5pt 14pt !important;}
+  .client-bar{padding:4pt 14pt !important;}
+  .page-footer-editor{display:none !important;}
+  tr.insert-row{display:none !important;}
+  .placeholder-hint{display:none !important;}
+  #close-modal,#session-modal{display:none !important;}
+  #print-footer-fixed{display:block !important;position:fixed;bottom:0;left:0;right:0;height:1.6cm;border-top:2pt solid #1d7a3c;background:white;padding:4pt 14pt 0;font-size:7pt;color:#555;line-height:1.5;text-align:center;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 </style>
 </head>
@@ -494,7 +263,7 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
 <!-- SIDEBAR -->
 <nav id="toolbar" class="no-print">
-  <div style="display: none;" class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>
+  <div style="display:none;" class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>
 
   <div class="tlabel">Formato</div>
   <button onclick="document.execCommand('bold')"><span class="icon">𝐁</span> Negritas</button>
@@ -502,9 +271,9 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
   <div class="tlabel">Alineación</div>
   <div class="align-row">
-    <button id="btn-align-left"    title="Izquierda" onclick="setAlign('left')"    class="icon">⬅</button>
-    <button id="btn-align-center"  title="Centrado"  onclick="setAlign('center')"  class="icon">↔</button>
-    <button id="btn-align-right"   title="Derecha"   onclick="setAlign('right')"   class="icon">➡</button>
+    <button id="btn-align-left" title="Izquierda" onclick="setAlign('left')" class="icon">⬅</button>
+    <button id="btn-align-center" title="Centrado" onclick="setAlign('center')" class="icon">↔</button>
+    <button id="btn-align-right" title="Derecha" onclick="setAlign('right')" class="icon">➡</button>
     <button id="btn-align-justify" title="Justificado" onclick="setAlign('justify')" style="font-size:11px;">≡</button>
   </div>
 
@@ -514,12 +283,8 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
   <hr>
   <div class="tlabel">Logo</div>
-  <button onclick="document.getElementById('file-logo').click()" class="primary">
-    <span class="icon">🖼</span> Cargar Logo
-  </button>
-  <button onclick="clearLogo()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
-    <span class="icon">✕</span> Quitar Logo
-  </button>
+  <button onclick="document.getElementById('file-logo').click()" class="primary"><span class="icon">🖼</span> Cargar Logo</button>
+  <button onclick="clearLogo()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);"><span class="icon">✕</span> Quitar Logo</button>
   <input type="file" id="file-logo" style="display:none" accept="image/*" onchange="loadLogo(this)">
 
   <hr>
@@ -530,31 +295,15 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   <input type="file" id="load-json" style="display:none" accept=".json" onchange="loadJSON(this)">
 
   <hr>
-
-  <!-- SESIÓN ACTUAL -->
-  <div class="tlabel">Sesión actual</div>
-  <div id="session-badge">
-    <strong>ID de pestaña</strong>
-    <span class="sid" id="session-id-display">—</span>
-  </div>
-  <button onclick="openNewTab()" class="primary" style="margin-top:2px;">
-    <span class="icon">➕</span> Nueva cotización
-  </button>
-  <button onclick="duplicateTab()" style="background:rgba(163,212,180,.12);border-color:rgba(163,212,180,.3);">
-    <span class="icon">📋</span> Duplicar esta
-  </button>
+  <div class="tlabel">Sesiones</div>
+  <button onclick="newBlankTab()" class="primary"><span class="icon">➕</span> Nueva cotización</button>
+  <button onclick="duplicateTab()" style="background:rgba(163,212,180,.12);border-color:rgba(163,212,180,.3);"><span class="icon">📋</span> Duplicar esta</button>
 
   <hr>
   <div class="tlabel">Guardado</div>
-  <button onclick="manualSave()" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:#4ade80;">
-    <span class="icon">💚</span> Guardar ahora
-  </button>
-  <button onclick="clearCurrentSession()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
-    <span class="icon">🗑</span> Limpiar esta hoja
-  </button>
-  <button onclick="showSessionManager()" style="font-size:11px;">
-    <span class="icon">📂</span> Ver guardadas
-  </button>
+  <button onclick="manualSave()" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:#4ade80;"><span class="icon">💚</span> Guardar ahora</button>
+  <button onclick="clearCurrentSession()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);"><span class="icon">🗑</span> Limpiar esta hoja</button>
+  <button onclick="showSessionManager()" style="font-size:11px;"><span class="icon">📂</span> Ver guardadas</button>
 
   <div id="autosave-badge">
     <div><span class="dot" id="save-dot"></span><span id="save-label">Sin cambios</span></div>
@@ -562,14 +311,30 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   </div>
 </nav>
 
+<!-- MODAL: CERRAR PESTAÑA -->
+<div id="close-modal" role="dialog" aria-modal="true">
+  <div class="close-modal-box">
+    <h2>⚠️ Cambios sin guardar en JSON</h2>
+    <p>
+      Tienes cambios que aún no has exportado como archivo JSON.<br>
+      Los cambios <strong>sí están guardados</strong> en el navegador, pero si borras caché o abres el documento en otro equipo, los perderás.
+    </p>
+    <div class="close-modal-actions">
+      <button class="btn-save-json" onclick="saveJSONAndClose()">💾 Exportar JSON y cerrar</button>
+      <button class="btn-stay" onclick="closeModal()">↩ Volver a la cotización</button>
+      <button class="btn-leave" onclick="forceClose()">✕ Cerrar sin exportar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: GESTIÓN DE SESIONES -->
-<div id="session-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;">
+<div id="session-modal" role="dialog" aria-modal="true">
   <div style="background:#fff;border-radius:14px;padding:28px 32px;min-width:380px;max-width:520px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.25);max-height:80vh;display:flex;flex-direction:column;gap:16px;">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <h2 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--green-dark);">📂 Cotizaciones guardadas</h2>
       <button onclick="closeSessionManager()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
-    <p style="font-size:11px;color:var(--muted);">Haz clic en una cotización para abrirla en esta pestaña, o usa el botón para abrirla en una pestaña nueva.</p>
+    <p style="font-size:11px;color:var(--muted);">Cada cotización se guarda de forma independiente en el navegador.</p>
     <div id="session-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 </div>
@@ -604,7 +369,7 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
           <div class="meta-key">Fecha</div>
           <div class="meta-val" id="meta-fecha" contenteditable="true" spellcheck="false"></div>
         </div>
-        <div class="meta-row" style="display: none;">
+        <div class="meta-row" style="display:none;">
           <div class="meta-key">Cliente ID</div>
           <div class="meta-val" id="meta-cliente-id" contenteditable="true" spellcheck="false"></div>
         </div>
@@ -711,84 +476,61 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
 <!-- PIE FIJO PARA IMPRESIÓN -->
 <div id="print-footer-fixed"></div>
-
 <div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════
-//  SESIÓN POR PESTAÑA
-//  Cada pestaña tiene su propio SESSION_ID
-//  guardado en sessionStorage (se destruye
-//  al cerrar la pestaña). Los datos van en
-//  localStorage bajo la llave
-//  "dimcer_session_<ID>"
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+//  SISTEMA DE SESIONES — ARQUITECTURA SIMPLIFICADA
+//
+//  Problema anterior: cada pestaña generaba un ID nuevo en
+//  sessionStorage/localStorage, acumulando claves sin fin y
+//  causando que al abrir la misma cotización en otra pestaña
+//  la pestaña original ya no pudiera escribir en "su" clave.
+//
+//  Solución nueva:
+//  • Cada cotización tiene un QUOTE_ID estable (COT-XXXXXXXX).
+//    Ese ID se crea UNA sola vez cuando se crea la cotización,
+//    y se guarda DENTRO del estado en localStorage.
+//  • La llave en localStorage es siempre "dimcer_cot_<QUOTE_ID>".
+//  • sessionStorage solo lleva el quoteId activo en esta pestaña.
+//  • Si dos pestañas editan la misma cotización, la que guarda
+//    último gana (last-write-wins, igual que antes), pero ahora
+//    la llave es estable → no hay acumulación.
+//  • "Nueva cotización" genera un QUOTE_ID fresco → archivo nuevo.
+//  • "Duplicar" genera un QUOTE_ID fresco con los datos copiados.
+// ═══════════════════════════════════════════════════════════════════
 
-const LOGO_KEY       = 'dimcer_logo';
-const SESSION_PREFIX = 'dimcer_session_';
-const CLAIMED_PREFIX = 'dimcer_claimed_';
+const LOGO_KEY   = 'dimcer_logo';
+const COT_PREFIX = 'dimcer_cot_';
 
-// ── CÓMO FUNCIONA LA SESIÓN ──
-// sessionStorage se copia cuando el navegador duplica una pestaña (Ctrl+D,
-// clic derecho → duplicar). Para evitar que dos pestañas compartan el mismo ID
-// usamos un flag "reclamado" en localStorage:
-//   - Al cargar, leemos el ID de sessionStorage.
-//   - Si ese ID YA está reclamado en localStorage por OTRA instancia,
-//     generamos un ID nuevo (esta es una pestaña duplicada).
-//   - Si no está reclamado, lo reclamamos ahora.
-// Al cerrar la pestaña (beforeunload) liberamos el claim.
-// Esto garantiza que cada pestaña activa tenga un ID único, incluso si
-// el navegador duplicó el sessionStorage.
-
-function genId() {
-  return 'COT-' + Date.now().toString(36).toUpperCase()
-       + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+// ── Resolver el QUOTE_ID de esta pestaña ──
+function genQuoteId() {
+  return 'COT' + Date.now().toString(36).toUpperCase()
+       + Math.random().toString(36).slice(2,6).toUpperCase();
 }
 
-function initSessionId() {
-  // ¿Hay un ID en sessionStorage?
-  let id = sessionStorage.getItem('dimcer_tab_id');
+// Al cargar: puede venir un ?load=<quoteId> (para abrir desde gestor en pestaña nueva)
+// o ?clone=<quoteId> (para duplicar con ID nuevo)
+// o nada (restaurar sesión propia de sessionStorage, o hoja en blanco)
+const _urlParams  = new URLSearchParams(location.search);
+const _loadParam  = _urlParams.get('load');   // abrir cotización existente
+const _cloneParam = _urlParams.get('clone');  // duplicar con ID nuevo
 
-  if (id) {
-    // Verificar si ya está reclamado por OTRA pestaña activa
-    const claimVal = localStorage.getItem(CLAIMED_PREFIX + id);
-    const myMark   = sessionStorage.getItem('dimcer_my_claim');
-    // Si el claim existe Y no fue puesto por esta misma instancia → duplicada
-    if (claimVal && claimVal !== myMark) {
-      id = genId(); // nueva pestaña duplicada: nuevo ID
-      sessionStorage.setItem('dimcer_tab_id', id);
-    }
-  } else {
-    id = genId();
-    sessionStorage.setItem('dimcer_tab_id', id);
-  }
+let QUOTE_ID; // se define en DOMContentLoaded después de decidir qué hacer
 
-  // Reclamar este ID con una marca única de instancia
-  const mark = Date.now() + '-' + Math.random();
-  sessionStorage.setItem('dimcer_my_claim', mark);
-  localStorage.setItem(CLAIMED_PREFIX + id, mark);
-
-  return id;
-}
-
-const SESSION_ID = initSessionId();
-
-// Liberar el claim al cerrar para no bloquear futuras restauraciones
-window.addEventListener('pagehide', () => {
-  localStorage.removeItem(CLAIMED_PREFIX + SESSION_ID);
-});
-
-function saveKey() { return SESSION_PREFIX + SESSION_ID; }
+// ── Clave de storage para esta cotización ──
+function storageKey() { return COT_PREFIX + QUOTE_ID; }
 
 // ═══════════════════════════════════════════
-//  DATA
+//  ESTADO
 // ═══════════════════════════════════════════
-let quoteData = [];
-let saveTimer = null;
-let isDirty   = false;
+let quoteData  = [];
+let saveTimer  = null;
+let isDirty    = false;
+let jsonExported = false; // rastrear si se exportó desde que se hizo el último cambio
 
 // ═══════════════════════════════════════════
-//  LOGO
+//  LOGO (compartido entre cotizaciones)
 // ═══════════════════════════════════════════
 function loadLogo(input) {
   if (!input.files || !input.files[0]) return;
@@ -819,14 +561,14 @@ function clearLogo() {
 }
 
 // ═══════════════════════════════════════════
-//  PLACEHOLDER BEHAVIOUR
+//  PLACEHOLDERS
 // ═══════════════════════════════════════════
 function initPlaceholders() {
   document.querySelectorAll('[data-placeholder]').forEach(el => {
     checkPlaceholder(el);
-    el.addEventListener('focus',  () => { if(el.querySelector('.placeholder-hint')) el.innerHTML=''; });
-    el.addEventListener('blur',   () => checkPlaceholder(el));
-    el.addEventListener('input',  () => scheduleSave());
+    el.addEventListener('focus', () => { if(el.querySelector('.placeholder-hint')) el.innerHTML=''; });
+    el.addEventListener('blur',  () => checkPlaceholder(el));
+    el.addEventListener('input', () => scheduleSave());
   });
 }
 function checkPlaceholder(el) {
@@ -837,14 +579,9 @@ function checkPlaceholder(el) {
 }
 
 // ═══════════════════════════════════════════
-//  ALINEACIÓN DE TEXTO
+//  ALINEACIÓN
 // ═══════════════════════════════════════════
-const ALIGN_CMDS = {
-  left:    'justifyLeft',
-  center:  'justifyCenter',
-  right:   'justifyRight',
-  justify: 'justifyFull'
-};
+const ALIGN_CMDS = { left:'justifyLeft', center:'justifyCenter', right:'justifyRight', justify:'justifyFull' };
 function setAlign(dir) {
   document.execCommand(ALIGN_CMDS[dir]);
   ['left','center','right','justify'].forEach(d => {
@@ -854,12 +591,7 @@ function setAlign(dir) {
   scheduleSave();
 }
 document.addEventListener('selectionchange', () => {
-  const map = {
-    left:    document.queryCommandState('justifyLeft'),
-    center:  document.queryCommandState('justifyCenter'),
-    right:   document.queryCommandState('justifyRight'),
-    justify: document.queryCommandState('justifyFull'),
-  };
+  const map = { left:document.queryCommandState('justifyLeft'), center:document.queryCommandState('justifyCenter'), right:document.queryCommandState('justifyRight'), justify:document.queryCommandState('justifyFull') };
   Object.entries(map).forEach(([d, active]) => {
     const b = document.getElementById('btn-align-' + d);
     if (b) b.classList.toggle('active', active);
@@ -867,7 +599,7 @@ document.addEventListener('selectionchange', () => {
 });
 
 // ═══════════════════════════════════════════
-//  SECTIONS & ITEMS
+//  SECCIONES E ÍTEMS
 // ═══════════════════════════════════════════
 function addSection() {
   const t = prompt('Nombre de la sección:', 'NUEVA SECCIÓN');
@@ -900,7 +632,7 @@ function deleteItem(sIdx, iIdx) {
 }
 
 // ═══════════════════════════════════════════
-//  IMAGES
+//  IMÁGENES EN FILAS
 // ═══════════════════════════════════════════
 function addImg(input, s, i) {
   if (!input.files || !input.files[0]) return;
@@ -940,7 +672,7 @@ function render() {
 
       const tr = document.createElement('tr');
       tr.className = 'row-item';
-      const imgs = item.images.map((src,imgIdx) => `
+      const imgs = item.images.map((src, imgIdx) => `
         <div class="img-thumb">
           <img src="${src}">
           <button class="del-img no-print" onclick="delImg(${sIdx},${iIdx},${imgIdx})">✕</button>
@@ -1028,7 +760,7 @@ function escHtml(str) {
 }
 
 // ═══════════════════════════════════════════
-//  CALC
+//  CÁLCULOS
 // ═══════════════════════════════════════════
 function updateNum(sIdx, iIdx, el, type) {
   const v = parseFloat(el.innerText.replace(/[^0-9.]/g,'')) || 0;
@@ -1057,11 +789,11 @@ function fmt(n) {
 }
 
 // ═══════════════════════════════════════════
-//  GUARDADO POR SESIÓN
+//  RECOLECTAR / APLICAR ESTADO
 // ═══════════════════════════════════════════
 function collectState() {
   return {
-    sessionId: SESSION_ID,
+    quoteId: QUOTE_ID,   // ← ID estable de la cotización
     quoteData,
     iva: document.getElementById('iva-check').checked,
     fields: {
@@ -1086,50 +818,93 @@ function applyState(state) {
   quoteData = state.quoteData || [];
   if (state.iva) document.getElementById('iva-check').checked = true;
   const f = state.fields || {};
-  if (f.companyInfo)   document.getElementById('company-info').innerHTML   = f.companyInfo;
-  if (f.advisorName)   document.getElementById('advisor-name').innerHTML   = f.advisorName;
-  if (f.metaNum)       document.getElementById('meta-num').innerText       = f.metaNum;
-  if (f.metaFecha)     document.getElementById('meta-fecha').innerText     = f.metaFecha;
-  if (f.metaClienteId) document.getElementById('meta-cliente-id').innerText= f.metaClienteId;
-  if (f.metaValid)     document.getElementById('meta-valid').innerText     = f.metaValid;
-  if (f.clientInfo)    document.getElementById('client-info').innerHTML    = f.clientInfo;
-  if (f.introText)     document.getElementById('intro-text').innerHTML     = f.introText;
-  if (f.termsBody)     document.getElementById('terms-body').innerHTML     = f.termsBody;
-  if (f.footerAddress) document.getElementById('footer-address').innerHTML = f.footerAddress;
-  if (f.pageFooter)    document.getElementById('page-footer-text').innerHTML = f.pageFooter;
+  if (f.companyInfo)    document.getElementById('company-info').innerHTML    = f.companyInfo;
+  if (f.advisorName)    document.getElementById('advisor-name').innerHTML    = f.advisorName;
+  if (f.metaNum)        document.getElementById('meta-num').innerText        = f.metaNum;
+  if (f.metaFecha)      document.getElementById('meta-fecha').innerText      = f.metaFecha;
+  if (f.metaClienteId)  document.getElementById('meta-cliente-id').innerText = f.metaClienteId;
+  if (f.metaValid)      document.getElementById('meta-valid').innerText      = f.metaValid;
+  if (f.clientInfo)     document.getElementById('client-info').innerHTML     = f.clientInfo;
+  if (f.introText)      document.getElementById('intro-text').innerHTML      = f.introText;
+  if (f.termsBody)      document.getElementById('terms-body').innerHTML      = f.termsBody;
+  if (f.footerAddress)  document.getElementById('footer-address').innerHTML  = f.footerAddress;
+  if (f.pageFooter)     document.getElementById('page-footer-text').innerHTML= f.pageFooter;
   render();
 }
 
+// ═══════════════════════════════════════════
+//  GUARDADO AUTOMÁTICO EN localStorage
+// ═══════════════════════════════════════════
 function scheduleSave() {
   setSaveDot('saving', 'Guardando...');
   isDirty = true;
+  jsonExported = false;
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(doSave, 3000);
+  saveTimer = setTimeout(doSave, 2000);
 }
 
 function doSave() {
   try {
     const state = collectState();
-    localStorage.setItem(saveKey(), JSON.stringify(state));
-    const t = new Date(state.savedAt);
-    const ts = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const key   = storageKey();
+
+    const json = JSON.stringify(state);
+
+    // 🔴 DEBUG: tamaño del JSON
+    console.log('Guardando clave:', key);
+    console.log('Tamaño JSON:', json.length);
+
+    localStorage.setItem(key, json);
+
+    // 🔴 DEBUG: verificar
+    const verify = localStorage.getItem(key);
+    if (!verify) throw new Error('No se pudo leer después de guardar');
+
+    console.log('Guardado OK');
+
+    sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
+
+    const ts = new Date().toLocaleTimeString('es-MX',{
+      hour:'2-digit',minute:'2-digit',second:'2-digit'
+    });
+
     setSaveDot('saved', 'Guardado');
     document.getElementById('save-time').textContent = ts;
+
     isDirty = false;
+
   } catch(e) {
-    setSaveDot('', 'Error al guardar');
+    console.error('🔥 ERROR REAL:', e);
+
+    setSaveDot('error', 'Error al guardar');
+
+    toast('⚠️ Error: ' + (e.message || e));
+
+    showDebugError(e); // 👈 nueva función
   }
 }
+function showDebugError(err) {
+  const box = document.getElementById('debug-console');
+  box.style.display = 'block';
 
+  const msg = `[${new Date().toLocaleTimeString()}] ERROR:\n${err.stack || err}\n\n`;
+
+  box.innerText += msg;
+  box.scrollTop = box.scrollHeight;
+}
 function manualSave() {
   clearTimeout(saveTimer);
   doSave();
-  toast('💚 Guardado manualmente');
+  toast('💚 Guardado');
 }
 
 function clearCurrentSession() {
-  if (!confirm('¿Limpiar esta hoja y empezar desde cero?\n(No afecta otras pestañas)')) return;
-  try { localStorage.removeItem(saveKey()); } catch(e){}
+  if (!confirm('¿Limpiar esta hoja y comenzar una cotización en blanco?\n(No afecta otras cotizaciones guardadas)')) return;
+  // Borrar la cotización actual del storage
+  try { localStorage.removeItem(storageKey()); } catch(e){}
+  // Generar un ID nuevo → hoja en blanco independiente
+  QUOTE_ID = genQuoteId();
+  sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
   quoteData = [];
   render();
   ['company-info','advisor-name','meta-num','meta-fecha','meta-cliente-id',
@@ -1137,9 +912,18 @@ function clearCurrentSession() {
     const el = document.getElementById(id);
     if (el) { el.innerHTML = ''; checkPlaceholder(el); }
   });
+  document.getElementById('iva-check').checked = false;
+  // Poner fecha por defecto
+  const hoy = new Date();
+  const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('meta-fecha').textContent = fmtD(hoy);
+  const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
+  document.getElementById('meta-valid').textContent = fmtD(valid);
   setSaveDot('','Sin cambios');
   document.getElementById('save-time').textContent = '';
-  toast('🗑 Hoja limpia');
+  isDirty = false;
+  jsonExported = false;
+  toast('🗑 Hoja limpia — nueva cotización en blanco');
 }
 
 function setSaveDot(state, label) {
@@ -1149,25 +933,99 @@ function setSaveDot(state, label) {
   lbl.textContent = label;
 }
 
-window.addEventListener('beforeunload', () => { if (isDirty) doSave(); });
+// ═══════════════════════════════════════════
+//  AVISO AL CERRAR / RECARGAR PESTAÑA
+// ═══════════════════════════════════════════
+// Strategy:
+//  • Si hay cambios sin guardar en localStorage → guardar antes de morir
+//  • El "aviso real" es sobre el JSON: si no se ha exportado como archivo,
+//    mostrar modal personalizado antes de cerrar
+//  • NO usamos el beforeunload nativo (solo muestra texto genérico y
+//    muchos navegadores ya no lo respetan en file://)
+//  • En su lugar interceptamos los enlaces y el botón cerrar con un
+//    modal propio. Para el cierre real de pestaña/ventana usamos
+//    beforeunload de forma mínima solo para guardar el estado.
+
+let _allowClose = false; // bandera para permitir cierre después de confirmar
+
+window.addEventListener('beforeunload', (e) => {
+  // Siempre guardar si hay cambios pendientes
+  if (isDirty) {
+    clearTimeout(saveTimer);
+    doSave();
+  }
+  // Si no se ha exportado el JSON y hay datos, mostrar advertencia nativa
+  // (como respaldo; el modal personalizado es el flujo principal)
+  if (!_allowClose && !jsonExported && (quoteData.length > 0 || isDirty)) {
+    e.preventDefault();
+    e.returnValue = '¿Seguro que quieres cerrar? No has exportado el JSON de respaldo.';
+    return e.returnValue;
+  }
+});
+
+// Modal personalizado de cierre — se invoca desde el botón "✕" del navegador
+// NO podemos interceptar el botón X del navegador directamente, pero sí
+// podemos usarlo como pantalla de confirmación cuando el usuario hace
+// clic en "Cerrar pestaña" desde nuestra UI, o cuando usa Ctrl+W.
+// La advertencia nativa de beforeunload es el respaldo para ese caso.
+
+function showCloseModal() {
+  document.getElementById('close-modal').classList.add('visible');
+}
+function closeModal() {
+  document.getElementById('close-modal').classList.remove('visible');
+}
+function saveJSONAndClose() {
+  saveJSON();
+  _allowClose = true;
+  window.close();
+  // Si window.close() no funciona (pestaña no abierta por script), solo cerramos el modal
+  setTimeout(() => {
+    closeModal();
+    toast('✅ JSON exportado. Puedes cerrar la pestaña.');
+    _allowClose = false;
+  }, 500);
+}
+function forceClose() {
+  _allowClose = true;
+  closeModal();
+  // Intentar cerrar; si no se puede, solo notificar
+  window.close();
+  setTimeout(() => { _allowClose = false; }, 1000);
+}
+
+// Atajo de teclado: Ctrl+W → modal personalizado en lugar del cierre nativo
+window.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
+    if (!jsonExported && quoteData.length > 0) {
+      e.preventDefault();
+      showCloseModal();
+    }
+  }
+});
 
 // ═══════════════════════════════════════════
 //  NUEVA PESTAÑA / DUPLICAR
 // ═══════════════════════════════════════════
-function openNewTab() {
-  // Abre una copia limpia del archivo en pestaña nueva
-  // Funciona tanto con file:// como con http://
-  window.open(location.href.split('#')[0].split('?')[0], '_blank');
+function newBlankTab() {
+  // Abrir el mismo archivo sin parámetros → hoja en blanco con ID nuevo
+  const base = location.href.split('#')[0].split('?')[0];
+  window.open(base, '_blank');
 }
 
 function duplicateTab() {
+  // Guardar el estado actual bajo una clave temporal con un NUEVO quoteId
   const state = collectState();
-  const tmpKey = 'dimcer_transfer_' + Date.now();
-  try { localStorage.setItem(tmpKey, JSON.stringify(state)); } catch(e) {
+  const newId = genQuoteId();
+  state.quoteId = newId; // nuevo ID → cotización independiente
+  const tmpKey = COT_PREFIX + newId;
+  try {
+    localStorage.setItem(tmpKey, JSON.stringify(state));
+  } catch(e) {
     alert('No se pudo duplicar: localStorage no disponible'); return;
   }
   const base = location.href.split('#')[0].split('?')[0];
-  window.open(base + '?transfer=' + encodeURIComponent(tmpKey), '_blank');
+  window.open(base + '?load=' + encodeURIComponent(newId), '_blank');
   toast('📋 Duplicando en nueva pestaña…');
 }
 
@@ -1178,14 +1036,14 @@ function getAllSessions() {
   const sessions = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && k.startsWith(SESSION_PREFIX)) {
+    if (k && k.startsWith(COT_PREFIX)) {
       try {
         const s = JSON.parse(localStorage.getItem(k));
         if (s) sessions.push({ key: k, data: s });
       } catch(e) {}
     }
   }
-  sessions.sort((a,b) => new Date(b.data.savedAt) - new Date(a.data.savedAt));
+  sessions.sort((a,b) => new Date(b.data.savedAt||0) - new Date(a.data.savedAt||0));
   return sessions;
 }
 
@@ -1197,7 +1055,7 @@ function showSessionManager() {
     list.innerHTML = '<p style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">No hay cotizaciones guardadas.</p>';
   } else {
     sessions.forEach(({ key, data }) => {
-      const isActive = key === saveKey();
+      const isActive = (data.quoteId === QUOTE_ID);
       const clientText = data.fields?.clientInfo
         ? new DOMParser().parseFromString(data.fields.clientInfo,'text/html').body.innerText.trim().slice(0,40) || '(sin cliente)'
         : '(sin cliente)';
@@ -1221,20 +1079,21 @@ function showSessionManager() {
             ${escHtml(clientText)}
           </div>
           <div style="font-size:9px;color:var(--muted);margin-top:3px;">💾 ${fecha}</div>
+          <div style="font-size:8px;color:rgba(107,114,128,.5);font-family:'DM Mono',monospace;margin-top:1px;">${data.quoteId || key}</div>
         </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;">
+        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
           ${!isActive ? `
-          <button onclick="loadSessionHere('${key}')"
+          <button onclick="loadSessionHere('${data.quoteId || key}')"
             style="background:var(--green);color:#fff;border:none;border-radius:7px;
                    padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
             Abrir aquí
           </button>
-          <button onclick="loadSessionNewTab('${key}')"
+          <button onclick="loadSessionNewTab('${data.quoteId || key}')"
             style="background:var(--green-dark);color:#fff;border:none;border-radius:7px;
                    padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
             Nueva pestaña
-          </button>` : '<span style="font-size:10px;color:var(--green);">Activa</span>'}
-          <button onclick="deleteSession('${key}')"
+          </button>` : '<span style="font-size:10px;color:var(--green);align-self:center;">Activa</span>'}
+          <button onclick="deleteSession('${data.quoteId || key}', '${key}')"
             style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;
                    padding:6px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
             🗑
@@ -1244,34 +1103,51 @@ function showSessionManager() {
       list.appendChild(card);
     });
   }
-  const modal = document.getElementById('session-modal');
-  modal.style.display = 'flex';
+  document.getElementById('session-modal').classList.add('visible');
 }
 
 function closeSessionManager() {
-  document.getElementById('session-modal').style.display = 'none';
+  document.getElementById('session-modal').classList.remove('visible');
 }
 
-function loadSessionHere(key) {
-  if (!confirm('¿Cargar esta cotización en la pestaña actual?\nSe perderán los cambios no guardados.')) return;
+function loadSessionHere(quoteId) {
+  if (!confirm('¿Cargar esta cotización en la pestaña actual?\nSe guardarán primero los cambios de la cotización activa.')) return;
+  // Guardar estado actual antes de cambiar
+  clearTimeout(saveTimer);
+  doSave();
+
+  const key = COT_PREFIX + quoteId;
   try {
-    const state = JSON.parse(localStorage.getItem(key));
+    const raw = localStorage.getItem(key);
+    if (!raw) { alert('No se encontró la cotización.'); return; }
+    const state = JSON.parse(raw);
+    // Cambiar el QUOTE_ID activo a esta pestaña
+    QUOTE_ID = quoteId;
+    sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
     applyState(state);
     closeSessionManager();
+    isDirty = false;
+    jsonExported = false;
+    setSaveDot('saved', 'Cargada');
+    const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
+    document.getElementById('save-time').textContent = ts;
     toast('✅ Cotización cargada');
-  } catch(e) { alert('Error al cargar'); }
+  } catch(e) { alert('Error al cargar: ' + e.message); }
 }
 
-function loadSessionNewTab(key) {
+function loadSessionNewTab(quoteId) {
   const base = location.href.split('#')[0].split('?')[0];
-  window.open(base + '?transfer=' + encodeURIComponent(key), '_blank');
+  window.open(base + '?load=' + encodeURIComponent(quoteId), '_blank');
   closeSessionManager();
   toast('📂 Abriendo en nueva pestaña…');
 }
 
-function deleteSession(key) {
-  if (key === saveKey()) { alert('No puedes eliminar la sesión activa desde aquí.\nUsa "Limpiar esta hoja".'); return; }
-  if (!confirm('¿Eliminar esta cotización guardada?')) return;
+function deleteSession(quoteId, key) {
+  if (quoteId === QUOTE_ID) {
+    alert('No puedes eliminar la cotización activa desde aquí.\nUsa "Limpiar esta hoja" para comenzar de nuevo.');
+    return;
+  }
+  if (!confirm('¿Eliminar esta cotización guardada? Esta acción no se puede deshacer.')) return;
   localStorage.removeItem(key);
   showSessionManager();
   toast('🗑 Cotización eliminada');
@@ -1281,20 +1157,33 @@ function deleteSession(key) {
 //  EXPORT / IMPORT JSON
 // ═══════════════════════════════════════════
 function saveJSON() {
-  const blob = new Blob([JSON.stringify(collectState(),null,2)],{type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'cotizacion_dimcer_' + SESSION_ID + '.json'; a.click();
+  const state = collectState();
+  const numVal = document.getElementById('meta-num').innerText.trim() || QUOTE_ID;
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cotizacion_' + numVal.replace(/[^a-zA-Z0-9_-]/g,'_') + '.json';
+  a.click();
+  jsonExported = true;
   toast('📥 Exportada como JSON');
 }
+
 function loadJSON(input) {
   if (!input.files || !input.files[0]) return;
   const r = new FileReader();
   r.onload = e => {
     try {
       const state = JSON.parse(e.target.result);
+      // Si el JSON tiene un quoteId, usarlo para no duplicar en storage
+      if (state.quoteId) {
+        QUOTE_ID = state.quoteId;
+        sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
+      }
       applyState(state);
-      toast('✅ Cotización cargada');
-      scheduleSave();
+      isDirty = false;
+      jsonExported = true;
+      scheduleSave(); // guardar en localStorage con el ID correcto
+      toast('✅ Cotización cargada desde JSON');
     } catch { alert('Archivo JSON inválido'); }
   };
   r.readAsText(input.files[0]);
@@ -1306,16 +1195,13 @@ function loadJSON(input) {
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2600);
+  setTimeout(() => el.classList.remove('show'), 2800);
 }
 
 // ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  // Mostrar ID de sesión en sidebar
-  document.getElementById('session-id-display').textContent = SESSION_ID;
-
   initPlaceholders();
 
   document.getElementById('page-footer-text').addEventListener('input', scheduleSave);
@@ -1330,54 +1216,86 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logo) applyLogo(logo);
   } catch(e){}
 
-  // ── TRANSFERENCIA DE DATOS AL ABRIR NUEVA PESTAÑA ──
-  const urlParams = new URLSearchParams(location.search);
-  const transferKey = urlParams.get('transfer');
-  if (transferKey) {
+  // ── DECIDIR QUÉ COTIZACIÓN CARGAR ──────────────────────────────
+
+  if (_loadParam) {
+    // Abrir cotización existente (desde gestor o duplicar)
+    const existingKey = COT_PREFIX + _loadParam;
     try {
-      const transferred = JSON.parse(localStorage.getItem(transferKey));
-      if (transferred) {
-        localStorage.removeItem(transferKey);
-        applyState(transferred);
-        doSave();
-        setSaveDot('saved','Duplicada');
-        toast('📋 Cotización duplicada en esta pestaña');
-        // Limpiar ?transfer= de la URL sin recargar
-        const cleanUrl = location.href.split('?')[0];
-        history.replaceState({}, '', cleanUrl);
-        return;
+      const raw = localStorage.getItem(existingKey);
+      if (raw) {
+        const state = JSON.parse(raw);
+        QUOTE_ID = state.quoteId || _loadParam;
+        sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
+        applyState(state);
+        isDirty = false;
+        setSaveDot('saved', 'Cargada');
+        const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
+        document.getElementById('save-time').textContent = ts;
+        toast('📂 Cotización cargada');
+      } else {
+        throw new Error('No encontrada en storage');
       }
-    } catch(e) {}
+    } catch(e) {
+      toast('⚠️ No se pudo cargar la cotización: ' + e.message);
+      QUOTE_ID = genQuoteId();
+      sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
+      initBlank();
+    }
+    // Limpiar URL
+    history.replaceState({}, '', location.href.split('?')[0]);
+    render();
+    setSaveDot('saved','Cargada');
+    syncPrintFooter();
+    return;
   }
 
-  // ── RESTAURAR SESIÓN PROPIA ──
-  try {
-    const raw = localStorage.getItem(saveKey());
-    if (raw) {
-      const state = JSON.parse(raw);
-      const t = new Date(state.savedAt);
-      const ts = t.toLocaleString('es-MX');
-      if (confirm(`Esta pestaña tenía una cotización guardada del ${ts}.\n¿Deseas restaurarla?`)) {
+  if (_cloneParam) {
+    // Ya no se usa este parámetro (se reemplazó por ?load con ID nuevo),
+    // pero por compatibilidad lo dejamos como alias
+    const base = location.href.split('#')[0].split('?')[0];
+    history.replaceState({}, '', base);
+  }
+
+  // ── Sin parámetros: intentar restaurar sesión de esta pestaña ──
+  const savedQuoteId = sessionStorage.getItem('dimcer_active_quote');
+  if (savedQuoteId) {
+    const key = COT_PREFIX + savedQuoteId;
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        const state = JSON.parse(raw);
+        QUOTE_ID = savedQuoteId;
         applyState(state);
-        setSaveDot('saved','Restaurada');
-        document.getElementById('save-time').textContent = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+        isDirty = false;
+        setSaveDot('saved', 'Restaurada');
+        const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
+        document.getElementById('save-time').textContent = ts;
         toast('✅ Sesión restaurada');
+        render();
+        syncPrintFooter();
         return;
       }
-    }
-  } catch(e){}
+    } catch(e) { console.error('Error restaurando sesión:', e); }
+  }
 
-  // Nueva sesión en blanco
-  const hoy  = new Date();
-  const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
-  document.getElementById('meta-fecha').textContent = fmtD(hoy);
-  const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
-  document.getElementById('meta-valid').textContent = fmtD(valid);
-
+  // ── Hoja completamente en blanco ──
+  QUOTE_ID = genQuoteId();
+  sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
+  initBlank();
   render();
-  setSaveDot('','Sin cambios');
+  setSaveDot('', 'Sin cambios');
+  syncPrintFooter();
 
-  // Sync pie de página para impresión
+  // ─────────────────────────────────────────────────────────────
+  function initBlank() {
+    const hoy  = new Date();
+    const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
+    document.getElementById('meta-fecha').textContent = fmtD(hoy);
+    const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
+    document.getElementById('meta-valid').textContent = fmtD(valid);
+  }
+
   function syncPrintFooter() {
     const src = document.getElementById('page-footer-text');
     const dst = document.getElementById('print-footer-fixed');
@@ -1385,12 +1303,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
     dst.innerHTML = html || '';
   }
-  document.getElementById('page-footer-text').addEventListener('input', syncPrintFooter);
+});
+
+// Sync pie de página para impresión
+function syncPrintFooter() {
+  const src = document.getElementById('page-footer-text');
+  const dst = document.getElementById('print-footer-fixed');
+  if (!dst || !src) return;
+  const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
+  dst.innerHTML = html || '';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const pfEl = document.getElementById('page-footer-text');
+  if (pfEl) pfEl.addEventListener('input', syncPrintFooter);
   window.addEventListener('beforeprint', syncPrintFooter);
 
-  // Cerrar modal con clic fuera
+  // Cerrar modales con clic fuera
   document.getElementById('session-modal').addEventListener('click', function(e) {
     if (e.target === this) closeSessionManager();
+  });
+  document.getElementById('close-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
   });
 });
 </script>
