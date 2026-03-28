@@ -26,69 +26,73 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 
 /* ── SIDEBAR ── */
 #toolbar{
-  position:fixed;top:0;left:0;width:220px;height:100vh;
-  background:rgb(8, 8, 51);padding:24px 16px;
-  display:flex;flex-direction:column;gap:7px;z-index:100;
+  position:fixed;top:0;left:0;width:230px;height:100vh;
+  background:rgb(8,8,51);padding:20px 14px;
+  display:flex;flex-direction:column;gap:6px;z-index:100;
   box-shadow:4px 0 24px rgba(0,0,0,.2);overflow-y:auto;
 }
-#toolbar .brand{
-  font-family:'Playfair Display',serif;color:var(--accent);
-  font-size:17px;font-weight:900;letter-spacing:.04em;
-  margin-bottom:14px;padding-bottom:14px;
-  border-bottom:1px solid rgba(255,255,255,.12);line-height:1.3;
-}
-#toolbar .brand small{display:block;font-size:10px;font-weight:300;color:var(--green-mid);font-family:'DM Sans',sans-serif;margin-top:3px;}
 #toolbar .tlabel{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--green-mid);margin-top:8px;margin-bottom:2px;}
 #toolbar button{
   display:flex;align-items:center;gap:8px;width:100%;
-  padding:9px 13px;background:rgba(255,255,255,.07);color:#fff;
+  padding:9px 12px;background:rgba(255,255,255,.07);color:#fff;
   border:1px solid rgba(255,255,255,.1);border-radius:8px;
   font-size:12px;font-family:'DM Sans',sans-serif;font-weight:500;
-  cursor:pointer;transition:background var(--transition),transform var(--transition);
+  cursor:pointer;transition:background var(--transition),transform var(--transition);text-align:left;
 }
 #toolbar button:hover{background:rgba(255,255,255,.16);transform:translateX(2px);}
 #toolbar button.primary{background:var(--green);border-color:var(--green);}
 #toolbar button.primary:hover{background:#25a04d;}
 #toolbar button.gold{background:rgba(245,200,66,.18);border-color:rgba(245,200,66,.4);color:var(--accent);}
-#toolbar .icon{font-size:15px;flex-shrink:0;}
-#toolbar hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin:5px 0;}
+#toolbar button:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+#toolbar .icon{font-size:14px;flex-shrink:0;}
+#toolbar hr{border:none;border-top:1px solid rgba(255,255,255,.1);margin:4px 0;}
 
 .align-row{display:flex;gap:4px;width:100%;}
 .align-row button{flex:1;padding:7px 4px;justify-content:center;font-size:13px;}
 .align-row button.active{background:rgba(245,200,66,.25);border-color:rgba(245,200,66,.6);color:var(--accent);}
 
-/* save indicator */
-#autosave-badge{
-  margin-top:auto;padding-top:10px;
-  font-size:9px;color:var(--green-mid);
-  text-align:center;line-height:1.5;
+/* ── SAVE STATUS PANEL ── */
+#save-panel{
+  margin-top:auto;padding:10px 10px 4px;
   border-top:1px solid rgba(255,255,255,.08);
 }
-#autosave-badge .dot{
-  display:inline-block;width:7px;height:7px;border-radius:50%;
-  background:var(--green-mid);margin-right:4px;vertical-align:middle;
-  transition:background .3s;
+#save-status{
+  display:flex;align-items:center;gap:7px;
+  font-size:10px;color:var(--green-mid);
+  padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
 }
-#autosave-badge .dot.saving{background:var(--accent);}
-#autosave-badge .dot.saved{background:#4ade80;}
-#autosave-badge .dot.error{background:#ef4444;}
+#save-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  background:var(--green-mid);transition:background .3s;
+}
+#save-dot.ok{background:#4ade80;}
+#save-dot.saving{background:#f59e0b;animation:pulse .8s infinite;}
+#save-dot.error{background:#ef4444;}
+#save-dot.nosave{background:rgba(255,255,255,.2);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+#save-text{line-height:1.4;font-size:10px;}
+#save-text strong{display:block;color:#fff;font-size:11px;}
 
-/* dirty indicator in title bar */
-.dirty-badge{
-  display:inline-block;background:#f59e0b;color:#fff;
-  font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;
-  margin-left:6px;vertical-align:middle;letter-spacing:.04em;
+/* folder indicator */
+#folder-chip{
+  display:none;margin-top:6px;padding:5px 8px;
+  background:rgba(29,122,60,.25);border:1px solid rgba(29,122,60,.4);
+  border-radius:6px;font-size:9px;color:var(--green-mid);
+  word-break:break-all;line-height:1.4;
 }
+#folder-chip.visible{display:block;}
 
 /* ── WRAPPER ── */
-#wrapper{margin-left:220px;padding:28px 32px 60px;display:flex;flex-direction:column;align-items:center;}
+#wrapper{margin-left:230px;padding:28px 32px 60px;display:flex;flex-direction:column;align-items:center;}
 
 /* ── PAPER ── */
 .paper{width:100%;max-width:1100px;background:var(--white);border-radius:14px;box-shadow:0 4px 40px rgba(0,0,0,.1);overflow:hidden;}
 
 /* ── HEADER ── */
 .doc-header{display:grid;grid-template-columns:1fr auto;gap:20px;padding:24px 32px 18px;border-bottom:2px solid var(--green-light);align-items:start;}
-.logo-zone{width:230px;height:82px;border:2px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:var(--bg);transition:border-color var(--transition),background var(--transition);position:relative;}
+.logo-zone{width:230px;height:82px;border:2px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;background:var(--bg);transition:border-color var(--transition),background var(--transition);}
 .logo-zone:hover{border-color:var(--green);background:var(--green-light);}
 .logo-zone img{width:100%;height:100%;object-fit:contain;}
 .logo-hint{font-size:10px;color:var(--muted);text-align:center;line-height:1.5;pointer-events:none;}
@@ -138,8 +142,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 /* ── INSERT ZONE ── */
 .insert-zone{position:relative;height:6px;cursor:pointer;transition:height var(--transition);}
 .insert-zone:hover{height:22px;}
-.insert-zone::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:transparent;border-top:2px dashed transparent;transition:border-color var(--transition);}
 .insert-zone:hover::after{border-color:var(--green);}
+.insert-zone::after{content:'';position:absolute;left:0;right:0;top:50%;border-top:2px dashed transparent;transition:border-color var(--transition);}
 .insert-zone .iz-btn{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--green);color:#fff;border:none;border-radius:20px;font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;white-space:nowrap;gap:4px;align-items:center;}
 .insert-zone:hover .iz-btn{display:flex;}
 .insert-zone .iz-btn-sec{display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--green-dark);color:#fff;border:none;border-radius:20px;font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;white-space:nowrap;align-items:center;gap:3px;}
@@ -196,33 +200,26 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 #toast.show{transform:translateY(0);opacity:1;}
 
 /* ── UNIT SELECT ── */
-.uni-select{width:100%;border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:10.5px;color:var(--ink);text-align:center;cursor:pointer;padding:2px 2px;border-radius:4px;-webkit-appearance:none;appearance:none;transition:background var(--transition);}
+.uni-select{width:100%;border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:10.5px;color:var(--ink);text-align:center;cursor:pointer;padding:2px;border-radius:4px;-webkit-appearance:none;appearance:none;transition:background var(--transition);}
 .uni-select:hover,.uni-select:focus{background:var(--green-light);}
 
-/* ── MODAL CLOSE WARNING ── */
-#close-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;}
-#close-modal.visible{display:flex;}
-.close-modal-box{background:#fff;border-radius:16px;padding:32px 36px;max-width:440px;width:90%;box-shadow:0 12px 50px rgba(0,0,0,.3);text-align:center;}
-.close-modal-box h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--green-dark);margin-bottom:10px;}
-.close-modal-box p{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:22px;}
-.close-modal-actions{display:flex;flex-direction:column;gap:9px;}
-.close-modal-actions button{padding:11px 20px;border-radius:10px;border:none;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity .15s;}
-.close-modal-actions button:hover{opacity:.85;}
-.btn-save-json{background:var(--green);color:#fff;}
-.btn-stay{background:var(--green-light);color:var(--green-dark);}
-.btn-leave{background:#fee2e2;color:var(--red);}
+/* ── MODAL ABRIR ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:center;justify-content:center;}
+.modal-bg.visible{display:flex;}
+.modal-box{background:#fff;border-radius:16px;padding:32px 36px;max-width:460px;width:90%;box-shadow:0 12px 50px rgba(0,0,0,.3);}
+.modal-box h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--green-dark);margin-bottom:10px;}
+.modal-box p{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
+.modal-actions{display:flex;flex-direction:column;gap:9px;}
+.modal-actions button{padding:12px 20px;border-radius:10px;border:none;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:8px;}
+.modal-actions button:hover{opacity:.85;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-dark{background:var(--green-dark);color:#fff;}
+.btn-light{background:var(--green-light);color:var(--green-dark);}
 
-/* ── SESSION MANAGER ── */
-#session-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;}
-#session-modal.visible{display:flex;}
-
-/* ── PRINT FIXED FOOTER ── */
+/* ── PRINT ── */
 #print-footer-fixed{display:none;}
-
-/* ══════════════ PRINT ══════════════ */
 @media print {
   @page{margin:1cm 1.2cm;size:A4;-webkit-print-color-adjust:exact;}
-  @page :first{margin-top:1cm;}
   @page{margin-bottom:2cm;}
   *,*::before,*::after{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
   #toolbar,.no-print{display:none !important;}
@@ -232,30 +229,19 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   #quote-table{width:100% !important;table-layout:fixed !important;font-size:8.5pt !important;border-radius:0 !important;border-collapse:collapse !important;}
   #quote-table thead{display:table-row-group !important;}
   #quote-table td,#quote-table th{min-width:0 !important;padding:5pt 5pt !important;overflow:hidden !important;}
-  .cell-edit{word-break:break-word !important;white-space:normal !important;overflow-wrap:break-word !important;}
+  .cell-edit{word-break:break-word !important;white-space:normal !important;}
   .cell-money{white-space:nowrap !important;font-size:8pt !important;}
-  .img-cell{gap:3pt !important;flex-wrap:wrap !important;max-width:60pt !important;overflow:hidden !important;}
-  .img-thumb img{width:56pt !important;height:56pt !important;max-width:56pt !important;object-fit:cover !important;display:block !important;}
+  .img-cell{gap:3pt !important;max-width:60pt !important;overflow:hidden !important;}
+  .img-thumb img{width:56pt !important;height:56pt !important;object-fit:cover !important;}
   .row-item{page-break-inside:avoid;}
   .row-section{page-break-after:avoid;}
-  .doc-header,.subtotals-wrap,.terms-wrap,.doc-footer{page-break-inside:avoid;}
-  .cell-edit:hover,.cell-edit:focus,.terms-body:hover,.terms-body:focus,.footer-address:hover,.footer-address:focus,.thanks-note:hover,.thanks-note:focus,.client-info:hover,.client-info:focus,.meta-val:hover,.meta-val:focus,.intro-text:hover,.intro-text:focus,.editable-subtle:hover,.editable-subtle:focus{background:transparent !important;}
-  .logo-zone{border:none !important;background:transparent !important;}
   .add-row-btn,.del-btn,.add-img-btn,.del-img{display:none !important;}
-  .uni-select{-webkit-appearance:none !important;background:transparent !important;border:none !important;font-size:8pt !important;}
-  .doc-header{padding:12pt 14pt 10pt !important;}
-  .table-wrap{padding:0 14pt 10pt !important;overflow:visible !important;}
-  .subtotals-wrap{padding:0 14pt 10pt !important;}
-  .terms-wrap{padding:0 14pt 12pt !important;}
-  .doc-footer{padding:8pt 14pt 14pt !important;}
-  .client-info{padding:6pt 14pt 8pt !important;}
-  .intro-text{padding:5pt 14pt !important;}
-  .client-bar{padding:4pt 14pt !important;}
-  .page-footer-editor{display:none !important;}
+  .logo-zone{border:none !important;background:transparent !important;}
+  .uni-select{-webkit-appearance:none !important;background:transparent !important;border:none !important;}
+  .page-footer-editor,.modal-bg{display:none !important;}
   tr.insert-row{display:none !important;}
   .placeholder-hint{display:none !important;}
-  #close-modal,#session-modal{display:none !important;}
-  #print-footer-fixed{display:block !important;position:fixed;bottom:0;left:0;right:0;height:1.6cm;border-top:2pt solid #1d7a3c;background:white;padding:4pt 14pt 0;font-size:7pt;color:#555;line-height:1.5;text-align:center;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  #print-footer-fixed{display:block !important;position:fixed;bottom:0;left:0;right:0;height:1.6cm;border-top:2pt solid #1d7a3c;background:white;padding:4pt 14pt 0;font-size:7pt;color:#555;text-align:center;}
 }
 </style>
 </head>
@@ -263,7 +249,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
 <!-- SIDEBAR -->
 <nav id="toolbar" class="no-print">
-  <div style="display:none;" class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>
 
   <div class="tlabel">Formato</div>
   <button onclick="document.execCommand('bold')"><span class="icon">𝐁</span> Negritas</button>
@@ -288,54 +273,54 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   <input type="file" id="file-logo" style="display:none" accept="image/*" onchange="loadLogo(this)">
 
   <hr>
+  <div class="tlabel">Archivo en disco</div>
+  <button onclick="cmdNueva()" class="primary"><span class="icon">📄</span> Nueva cotización</button>
+  <button onclick="cmdAbrir()"><span class="icon">📂</span> Abrir JSON...</button>
+  <button onclick="cmdGuardar()" id="btn-guardar" class="gold"><span class="icon">💾</span> Guardar</button>
+  <button onclick="cmdGuardarComo()" id="btn-guardarcomo"><span class="icon">💾</span> Guardar como...</button>
+  <button onclick="cmdDuplicar()"><span class="icon">📋</span> Duplicar</button>
+
+  <hr>
   <div class="tlabel">Documento</div>
   <button onclick="window.print()" class="primary"><span class="icon">🖨</span> Crear PDF</button>
-  <button onclick="saveJSON()" class="gold"><span class="icon">💾</span> Exportar JSON</button>
-  <button onclick="document.getElementById('load-json').click()"><span class="icon">📂</span> Importar JSON</button>
-  <input type="file" id="load-json" style="display:none" accept=".json" onchange="loadJSON(this)">
 
-  <hr>
-  <div class="tlabel">Sesiones</div>
-  <button onclick="newBlankTab()" class="primary"><span class="icon">➕</span> Nueva cotización</button>
-  <button onclick="duplicateTab()" style="background:rgba(163,212,180,.12);border-color:rgba(163,212,180,.3);"><span class="icon">📋</span> Duplicar esta</button>
-
-  <hr>
-  <div class="tlabel">Guardado</div>
-  <button onclick="manualSave()" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:#4ade80;"><span class="icon">💚</span> Guardar ahora</button>
-  <button onclick="clearCurrentSession()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);"><span class="icon">🗑</span> Limpiar esta hoja</button>
-  <button onclick="showSessionManager()" style="font-size:11px;"><span class="icon">📂</span> Ver guardadas</button>
-
-  <div id="autosave-badge">
-    <div><span class="dot" id="save-dot"></span><span id="save-label">Sin cambios</span></div>
-    <div id="save-time" style="margin-top:2px;opacity:.6;"></div>
+  <div id="save-panel">
+    <div id="save-status">
+      <div id="save-dot" class="nosave"></div>
+      <div id="save-text">
+        <strong id="save-title">Sin archivo</strong>
+        <span id="save-sub">Usa "Guardar como" para elegir dónde guardar</span>
+      </div>
+    </div>
+    <div id="folder-chip" title="Archivo activo"></div>
   </div>
 </nav>
 
-<!-- MODAL: CERRAR PESTAÑA -->
-<div id="close-modal" role="dialog" aria-modal="true">
-  <div class="close-modal-box">
-    <h2>⚠️ Cambios sin guardar en JSON</h2>
+<!-- MODAL: SIN SOPORTE -->
+<div class="modal-bg" id="modal-nosupport">
+  <div class="modal-box">
+    <h2>⚠️ Navegador no compatible</h2>
     <p>
-      Tienes cambios que aún no has exportado como archivo JSON.<br>
-      Los cambios <strong>sí están guardados</strong> en el navegador, pero si borras caché o abres el documento en otro equipo, los perderás.
+      La función de guardar en disco requiere <strong>Chrome o Edge</strong> versión 86 o superior.<br><br>
+      En Firefox o Safari el archivo se descarga manualmente (como antes).<br><br>
+      Por favor abre este archivo en <strong>Google Chrome</strong> para la mejor experiencia.
     </p>
-    <div class="close-modal-actions">
-      <button class="btn-save-json" onclick="saveJSONAndClose()">💾 Exportar JSON y cerrar</button>
-      <button class="btn-stay" onclick="closeModal()">↩ Volver a la cotización</button>
-      <button class="btn-leave" onclick="forceClose()">✕ Cerrar sin exportar</button>
+    <div class="modal-actions">
+      <button class="btn-light" onclick="closeModal('modal-nosupport')">Entendido, continuar de todas formas</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: GESTIÓN DE SESIONES -->
-<div id="session-modal" role="dialog" aria-modal="true">
-  <div style="background:#fff;border-radius:14px;padding:28px 32px;min-width:380px;max-width:520px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.25);max-height:80vh;display:flex;flex-direction:column;gap:16px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <h2 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--green-dark);">📂 Cotizaciones guardadas</h2>
-      <button onclick="closeSessionManager()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);">✕</button>
+<!-- MODAL: NUEVA CON CAMBIOS SIN GUARDAR -->
+<div class="modal-bg" id="modal-unsaved">
+  <div class="modal-box">
+    <h2>⚠️ Cambios sin guardar</h2>
+    <p>Tienes cambios que no has guardado. ¿Qué quieres hacer?</p>
+    <div class="modal-actions">
+      <button class="btn-green" onclick="cmdGuardar(); pendingAction && pendingAction(); closeModal('modal-unsaved')"><span class="icon">💾</span> Guardar y continuar</button>
+      <button class="btn-dark" onclick="pendingAction && pendingAction(); closeModal('modal-unsaved')"><span class="icon">✕</span> Descartar cambios</button>
+      <button class="btn-light" onclick="closeModal('modal-unsaved')">↩ Cancelar</button>
     </div>
-    <p style="font-size:11px;color:var(--muted);">Cada cotización se guarda de forma independiente en el navegador.</p>
-    <div id="session-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 </div>
 
@@ -343,7 +328,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 <div id="wrapper">
 <div class="paper">
 
-  <!-- HEADER -->
   <div class="doc-header">
     <div>
       <div class="logo-zone" id="logo-zone" onclick="document.getElementById('file-logo').click()" title="Clic para cargar logo">
@@ -369,10 +353,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
           <div class="meta-key">Fecha</div>
           <div class="meta-val" id="meta-fecha" contenteditable="true" spellcheck="false"></div>
         </div>
-        <div class="meta-row" style="display:none;">
-          <div class="meta-key">Cliente ID</div>
-          <div class="meta-val" id="meta-cliente-id" contenteditable="true" spellcheck="false"></div>
-        </div>
         <div class="meta-row">
           <div class="meta-key">Válido Hasta</div>
           <div class="meta-val" id="meta-valid" contenteditable="true" spellcheck="false"></div>
@@ -381,16 +361,13 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     </div>
   </div>
 
-  <!-- CLIENT -->
   <div class="client-bar">👤 Cliente</div>
   <div class="client-info" id="client-info" contenteditable="true" spellcheck="false"
     data-placeholder="Nombre del cliente, dirección, ciudad..."></div>
 
-  <!-- INTRO -->
   <div class="intro-text" id="intro-text" contenteditable="true" spellcheck="false"
     data-placeholder="Texto introductorio de la cotización (opcional)..."></div>
 
-  <!-- TABLE -->
   <div class="table-wrap">
     <table id="quote-table">
       <thead>
@@ -412,11 +389,10 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     </div>
   </div>
 
-  <!-- SUBTOTALS -->
   <div class="subtotals-wrap">
     <div class="subtotals-box">
       <label class="iva-toggle no-print">
-        <input type="checkbox" id="iva-check" onchange="calcTotal(); scheduleSave();">
+        <input type="checkbox" id="iva-check" onchange="calcTotal();markDirty();">
         Incluir IVA (16%)
       </label>
       <div class="sub-row">
@@ -434,7 +410,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     </div>
   </div>
 
-  <!-- TERMS -->
   <div class="terms-wrap">
     <div class="terms-head">📋 Términos y Condiciones</div>
     <div class="terms-body" id="terms-body" contenteditable="true" spellcheck="false">
@@ -450,7 +425,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     </div>
   </div>
 
-  <!-- FOOTER -->
   <div class="doc-footer">
     <div class="footer-address editable-subtle" id="footer-address" contenteditable="true" spellcheck="false"
       data-placeholder="Dirección, teléfono, correo..."></div>
@@ -464,202 +438,439 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     </div>
   </div>
 
-  <!-- PIE DE PÁGINA EDITABLE -->
   <div class="page-footer-editor">
     <div class="page-footer-editor-label">🗒 Pie de página<br><span style="font-weight:400;opacity:.7;">(aparece en cada hoja)</span></div>
     <div class="page-footer-inner" id="page-footer-text" contenteditable="true" spellcheck="false"
-      data-placeholder="Escribe aquí el pie de página: dirección, teléfono, aviso legal, redes..."></div>
+      data-placeholder="Pie de página: dirección, teléfono, aviso legal..."></div>
   </div>
 
 </div><!-- /paper -->
 </div><!-- /wrapper -->
 
-<!-- PIE FIJO PARA IMPRESIÓN -->
 <div id="print-footer-fixed"></div>
 <div id="toast"></div>
+<input type="file" id="input-abrir" style="display:none" accept=".json" onchange="abrirDesdeInput(this)">
 
 <script>
 // ═══════════════════════════════════════════════════════════════════
-//  SISTEMA DE SESIONES — ARQUITECTURA SIMPLIFICADA
+//  DIMCER v3 — GUARDADO EN DISCO (File System Access API)
 //
-//  Problema anterior: cada pestaña generaba un ID nuevo en
-//  sessionStorage/localStorage, acumulando claves sin fin y
-//  causando que al abrir la misma cotización en otra pestaña
-//  la pestaña original ya no pudiera escribir en "su" clave.
+//  Estrategia:
+//  ┌─────────────────────────────────────────────────────────────┐
+//  │  • Chrome/Edge  → File System Access API                   │
+//  │    - "Guardar como" abre diálogo del sistema y devuelve    │
+//  │      un FileSystemFileHandle que se reutiliza siempre.     │
+//  │    - "Guardar" escribe directamente en el mismo archivo.   │
+//  │    - Las imágenes van DENTRO del JSON como base64          │
+//  │      (el JSON es el único archivo — portátil y simple).    │
+//  │                                                             │
+//  │  • Firefox/Safari → fallback: descarga manual del JSON     │
+//  │    (como antes, sin cambios).                               │
+//  │                                                             │
+//  │  • localStorage → SOLO para el handle serializado          │
+//  │    (FileSystemFileHandle no se puede clonar, pero sí se    │
+//  │    puede persistir con indexedDB o con el handle mismo).    │
+//  │    Aquí usamos una pequeña IndexedDB solo para el handle.   │
+//  └─────────────────────────────────────────────────────────────┘
 //
-//  Solución nueva:
-//  • Cada cotización tiene un QUOTE_ID estable (COT-XXXXXXXX).
-//    Ese ID se crea UNA sola vez cuando se crea la cotización,
-//    y se guarda DENTRO del estado en localStorage.
-//  • La llave en localStorage es siempre "dimcer_cot_<QUOTE_ID>".
-//  • sessionStorage solo lleva el quoteId activo en esta pestaña.
-//  • Si dos pestañas editan la misma cotización, la que guarda
-//    último gana (last-write-wins, igual que antes), pero ahora
-//    la llave es estable → no hay acumulación.
-//  • "Nueva cotización" genera un QUOTE_ID fresco → archivo nuevo.
-//  • "Duplicar" genera un QUOTE_ID fresco con los datos copiados.
+//  Sin caché de navegador. Sin límites de 5 MB.
+//  El JSON puede tener cualquier tamaño (límite del disco).
 // ═══════════════════════════════════════════════════════════════════
 
-const LOGO_KEY   = 'dimcer_logo';
-const COT_PREFIX = 'dimcer_cot_';
+const FS_SUPPORT = ('showSaveFilePicker' in window);
 
-// ── Resolver el QUOTE_ID de esta pestaña ──
-function genQuoteId() {
-  return 'COT' + Date.now().toString(36).toUpperCase()
-       + Math.random().toString(36).slice(2,6).toUpperCase();
+// ── IDB para persistir el FileSystemFileHandle entre recargas ───
+// (los handles no viven en localStorage porque no son serializables)
+let _handleDB = null;
+const HANDLE_DB  = 'DimcerHandles';
+const HANDLE_KEY = 'currentHandle';
+
+function openHandleDB() {
+  if (_handleDB) return _handleDB;
+  _handleDB = new Promise((res, rej) => {
+    const r = indexedDB.open(HANDLE_DB, 1);
+    r.onupgradeneeded = e => e.target.result.createObjectStore('h');
+    r.onsuccess  = e => res(e.target.result);
+    r.onerror    = e => rej(e.target.error);
+  });
+  return _handleDB;
 }
-
-// Al cargar: puede venir un ?load=<quoteId> (para abrir desde gestor en pestaña nueva)
-// o ?clone=<quoteId> (para duplicar con ID nuevo)
-// o nada (restaurar sesión propia de sessionStorage, o hoja en blanco)
-const _urlParams  = new URLSearchParams(location.search);
-const _loadParam  = _urlParams.get('load');   // abrir cotización existente
-const _cloneParam = _urlParams.get('clone');  // duplicar con ID nuevo
-
-let QUOTE_ID; // se define en DOMContentLoaded después de decidir qué hacer
-
-// ── Clave de storage para esta cotización ──
-function storageKey() { return COT_PREFIX + QUOTE_ID; }
-
-// ═══════════════════════════════════════════
-//  ESTADO
-// ═══════════════════════════════════════════
-let quoteData  = [];
-let saveTimer  = null;
-let isDirty    = false;
-let jsonExported = false; // rastrear si se exportó desde que se hizo el último cambio
-
-// ═══════════════════════════════════════════
-//  LOGO (compartido entre cotizaciones)
-// ═══════════════════════════════════════════
-function loadLogo(input) {
-  if (!input.files || !input.files[0]) return;
-  const r = new FileReader();
-  r.onload = e => {
-    applyLogo(e.target.result);
-    try { localStorage.setItem(LOGO_KEY, e.target.result); } catch(ex){}
-    toast('✅ Logo guardado');
-    scheduleSave();
-  };
-  r.readAsDataURL(input.files[0]);
-}
-function applyLogo(src) {
-  const zone = document.getElementById('logo-zone');
-  let img = zone.querySelector('img');
-  if (!img) { img = document.createElement('img'); zone.appendChild(img); }
-  img.src = src;
-  document.getElementById('logo-hint').style.display = 'none';
-}
-function clearLogo() {
-  const zone = document.getElementById('logo-zone');
-  const img = zone.querySelector('img');
-  if (img) img.remove();
-  document.getElementById('logo-hint').style.display = '';
-  try { localStorage.removeItem(LOGO_KEY); } catch(ex){}
-  toast('Logo eliminado');
-  scheduleSave();
-}
-
-// ═══════════════════════════════════════════
-//  PLACEHOLDERS
-// ═══════════════════════════════════════════
-function initPlaceholders() {
-  document.querySelectorAll('[data-placeholder]').forEach(el => {
-    checkPlaceholder(el);
-    el.addEventListener('focus', () => { if(el.querySelector('.placeholder-hint')) el.innerHTML=''; });
-    el.addEventListener('blur',  () => checkPlaceholder(el));
-    el.addEventListener('input', () => scheduleSave());
+async function saveHandle(h) {
+  const db = await openHandleDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('h','readwrite');
+    tx.objectStore('h').put(h, HANDLE_KEY);
+    tx.oncomplete=()=>res(); tx.onerror=e=>rej(e.target.error);
   });
 }
-function checkPlaceholder(el) {
-  const text = el.innerText.trim();
-  if (!text || text === el.getAttribute('data-placeholder')) {
-    el.innerHTML = `<span class="placeholder-hint">${el.getAttribute('data-placeholder')}</span>`;
+async function loadHandle() {
+  const db = await openHandleDB();
+  return new Promise((res,rej)=>{
+    const r = db.transaction('h','readonly').objectStore('h').get(HANDLE_KEY);
+    r.onsuccess=e=>res(e.target.result||null); r.onerror=e=>rej(e.target.error);
+  });
+}
+async function clearHandle() {
+  const db = await openHandleDB();
+  return new Promise((res,rej)=>{
+    const tx = db.transaction('h','readwrite');
+    tx.objectStore('h').delete(HANDLE_KEY);
+    tx.oncomplete=()=>res(); tx.onerror=e=>rej(e.target.error);
+  });
+}
+
+// ── Estado global ────────────────────────────────────────────────
+let quoteData    = [];
+let currentHandle = null;   // FileSystemFileHandle activo
+let isDirty      = false;
+let saveTimer    = null;
+let logoDataUrl  = null;    // logo guardado en memoria
+
+let pendingAction = null;   // acción a ejecutar tras resolver unsaved modal
+
+// ── helpers ─────────────────────────────────────────────────────
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(n){ return '$ '+n.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function toast(msg,dur=2800){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),dur);
+}
+function closeModal(id){ document.getElementById(id).classList.remove('visible'); }
+function openModal(id) { document.getElementById(id).classList.add('visible');   }
+
+// ── ESTADO DE GUARDADO en UI ─────────────────────────────────────
+function setStatus(dot, title, sub, fileName=''){
+  document.getElementById('save-dot').className = 'dot ' + dot;  // 'ok' 'saving' 'error' 'nosave'  <- FIX: era solo className sin clase base
+  document.getElementById('save-title').textContent = title;
+  document.getElementById('save-sub').textContent   = sub;
+  const chip = document.getElementById('folder-chip');
+  if(fileName){ chip.textContent='📄 '+fileName; chip.classList.add('visible'); }
+  else { chip.classList.remove('visible'); }
+}
+// FIX: setStatus usaba 'dot '+dot pero el CSS usa id="save-dot" con clases directas
+// Corrección: usar el id correcto
+function setSaveDot(state){
+  const el = document.getElementById('save-dot');
+  el.className = state; // 'ok' | 'saving' | 'error' | 'nosave'
+}
+
+// ── MARCAR SUCIO ─────────────────────────────────────────────────
+function markDirty(){
+  isDirty = true;
+  setSaveDot('saving');
+  document.getElementById('save-title').textContent = 'Cambios sin guardar';
+  document.getElementById('save-sub').textContent   = currentHandle
+    ? 'Presiona Guardar (Ctrl+S)'
+    : 'Usa "Guardar como" para elegir archivo';
+  // Autoguardado solo si ya hay un handle apuntado
+  if(currentHandle && FS_SUPPORT){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(()=>guardarEnHandle(), 2000);
   }
 }
 
-// ═══════════════════════════════════════════
-//  ALINEACIÓN
-// ═══════════════════════════════════════════
-const ALIGN_CMDS = { left:'justifyLeft', center:'justifyCenter', right:'justifyRight', justify:'justifyFull' };
-function setAlign(dir) {
-  document.execCommand(ALIGN_CMDS[dir]);
-  ['left','center','right','justify'].forEach(d => {
-    const b = document.getElementById('btn-align-' + d);
-    if (b) b.classList.toggle('active', d === dir);
-  });
-  scheduleSave();
+// ─────────────────────────────────────────────────────────────────
+//  COMANDOS DEL MENÚ
+// ─────────────────────────────────────────────────────────────────
+
+// Nueva cotización
+function cmdNueva(){
+  if(isDirty){
+    pendingAction = ()=>{ resetDoc(); };
+    openModal('modal-unsaved'); return;
+  }
+  resetDoc();
 }
-document.addEventListener('selectionchange', () => {
-  const map = { left:document.queryCommandState('justifyLeft'), center:document.queryCommandState('justifyCenter'), right:document.queryCommandState('justifyRight'), justify:document.queryCommandState('justifyFull') };
-  Object.entries(map).forEach(([d, active]) => {
-    const b = document.getElementById('btn-align-' + d);
-    if (b) b.classList.toggle('active', active);
-  });
+
+// Abrir JSON desde disco
+async function cmdAbrir(){
+  if(isDirty){
+    pendingAction = ()=>cmdAbrir();
+    openModal('modal-unsaved'); return;
+  }
+  if(FS_SUPPORT){
+    try{
+      const [handle] = await window.showOpenFilePicker({
+        types:[{description:'Cotización DIMCER',accept:{'application/json':['.json']}}],
+        multiple:false
+      });
+      await abrirDesdeHandle(handle);
+    } catch(e){ if(e.name!=='AbortError') toast('⚠️ Error al abrir: '+e.message); }
+  } else {
+    document.getElementById('input-abrir').click();
+  }
+}
+
+async function abrirDesdeHandle(handle){
+  const file  = await handle.getFile();
+  const text  = await file.text();
+  const state = JSON.parse(text);
+  applyState(state);
+  render();
+  currentHandle = handle;
+  await saveHandle(handle);
+  isDirty = false;
+  setSaveDot('ok');
+  document.getElementById('save-title').textContent = '✅ Guardado';
+  document.getElementById('save-sub').textContent   = 'Autoguardado activo';
+  document.getElementById('folder-chip').textContent = '📄 '+handle.name;
+  document.getElementById('folder-chip').classList.add('visible');
+  toast('📂 '+handle.name+' abierto');
+}
+
+// Abrir vía <input type=file> (Firefox fallback)
+async function abrirDesdeInput(input){
+  if(!input.files||!input.files[0]) return;
+  const text  = await input.files[0].text();
+  try{
+    const state = JSON.parse(text);
+    applyState(state);
+    render();
+    currentHandle = null;
+    isDirty = false;
+    setSaveDot('nosave');
+    document.getElementById('save-title').textContent = input.files[0].name;
+    document.getElementById('save-sub').textContent   = 'Abierto (sin autoguardado en Firefox)';
+    toast('✅ Cotización cargada');
+  } catch { alert('Archivo JSON inválido'); }
+  input.value='';
+}
+
+// Guardar en el handle actual
+async function cmdGuardar(){
+  if(!FS_SUPPORT){ cmdFallbackDescarga(); return; }
+  if(!currentHandle){ await cmdGuardarComo(); return; }
+  await guardarEnHandle();
+}
+
+// Guardar como → muestra diálogo del sistema
+async function cmdGuardarComo(){
+  if(!FS_SUPPORT){ cmdFallbackDescarga(); return; }
+  const numVal = document.getElementById('meta-num').innerText.trim() || 'cotizacion';
+  try{
+    const handle = await window.showSaveFilePicker({
+      suggestedName: 'cotizacion_'+numVal.replace(/[^a-zA-Z0-9_-]/g,'_')+'.json',
+      types:[{description:'Cotización DIMCER',accept:{'application/json':['.json']}}]
+    });
+    currentHandle = handle;
+    await saveHandle(handle);
+    document.getElementById('folder-chip').textContent = '📄 '+handle.name;
+    document.getElementById('folder-chip').classList.add('visible');
+    await guardarEnHandle();
+  } catch(e){ if(e.name!=='AbortError') toast('⚠️ Error: '+e.message); }
+}
+
+// Escribir en el handle actual
+async function guardarEnHandle(){
+  if(!currentHandle) return;
+  setSaveDot('saving');
+  try{
+    const state = collectState();
+    const json  = JSON.stringify(state, null, 2);
+    const writable = await currentHandle.createWritable();
+    await writable.write(json);
+    await writable.close();
+    isDirty = false;
+    setSaveDot('ok');
+    const ts = new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('save-title').textContent = '✅ Guardado';
+    document.getElementById('save-sub').textContent   = ts+' — '+currentHandle.name;
+  } catch(e){
+    setSaveDot('error');
+    document.getElementById('save-title').textContent = '❌ Error al guardar';
+    document.getElementById('save-sub').textContent   = e.message;
+    toast('⚠️ No se pudo guardar: '+e.message);
+  }
+}
+
+// Fallback: descarga manual (Firefox/Safari)
+function cmdFallbackDescarga(){
+  const state  = collectState();
+  const numVal = document.getElementById('meta-num').innerText.trim() || 'cotizacion';
+  const blob   = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a      = document.createElement('a');
+  a.href       = URL.createObjectURL(blob);
+  a.download   = 'cotizacion_'+numVal.replace(/[^a-zA-Z0-9_-]/g,'_')+'.json';
+  a.click();
+  isDirty = false;
+  toast('📥 Archivo descargado');
+}
+
+// Duplicar: guarda como nuevo archivo
+async function cmdDuplicar(){
+  if(!FS_SUPPORT){ cmdFallbackDescarga(); return; }
+  const numVal = document.getElementById('meta-num').innerText.trim() || 'cotizacion';
+  try{
+    const handle = await window.showSaveFilePicker({
+      suggestedName: 'cotizacion_'+numVal+'_copia.json',
+      types:[{description:'Cotización DIMCER',accept:{'application/json':['.json']}}]
+    });
+    const state   = collectState();
+    const json    = JSON.stringify(state, null, 2);
+    const writable = await handle.createWritable();
+    await writable.write(json);
+    await writable.close();
+    toast('📋 Duplicado como '+handle.name);
+  } catch(e){ if(e.name!=='AbortError') toast('⚠️ Error: '+e.message); }
+}
+
+// Ctrl+S
+window.addEventListener('keydown', e=>{
+  if((e.ctrlKey||e.metaKey) && e.key==='s'){
+    e.preventDefault(); cmdGuardar();
+  }
 });
 
-// ═══════════════════════════════════════════
-//  SECCIONES E ÍTEMS
-// ═══════════════════════════════════════════
-function addSection() {
-  const t = prompt('Nombre de la sección:', 'NUEVA SECCIÓN');
-  if (!t) return;
-  quoteData.push({ title: t, items: [] });
-  render(); scheduleSave();
-}
-function insertSectionBefore(sIdx) {
-  const t = prompt('Nombre de la nueva sección:', 'NUEVA SECCIÓN');
-  if (!t) return;
-  quoteData.splice(sIdx, 0, { title: t, items: [] });
-  render(); scheduleSave();
-  toast('✅ Sección insertada');
-}
-function deleteSection(sIdx) {
-  if (!confirm('¿Eliminar sección "' + quoteData[sIdx].title + '"?')) return;
-  quoteData.splice(sIdx, 1); render(); scheduleSave();
-}
-function addItem(sIdx) {
-  quoteData[sIdx].items.push({ cant:1, uni:'PZA', desc:'', pu:0, images:[] });
-  render(); scheduleSave();
-}
-function insertItemBefore(sIdx, iIdx) {
-  quoteData[sIdx].items.splice(iIdx, 0, { cant:1, uni:'PZA', desc:'', pu:0, images:[] });
-  render(); scheduleSave();
-  toast('✅ Concepto insertado');
-}
-function deleteItem(sIdx, iIdx) {
-  quoteData[sIdx].items.splice(iIdx, 1); render(); scheduleSave();
-}
+// Alerta al cerrar con cambios
+window.addEventListener('beforeunload', e=>{
+  if(isDirty){
+    e.preventDefault();
+    e.returnValue='Tienes cambios sin guardar.';
+    return e.returnValue;
+  }
+});
 
-// ═══════════════════════════════════════════
-//  IMÁGENES EN FILAS
-// ═══════════════════════════════════════════
-function addImg(input, s, i) {
-  if (!input.files || !input.files[0]) return;
-  const r = new FileReader();
-  r.onload = e => { quoteData[s].items[i].images.push(e.target.result); render(); scheduleSave(); };
+// ─────────────────────────────────────────────────────────────────
+//  LOGO
+// ─────────────────────────────────────────────────────────────────
+function loadLogo(input){
+  if(!input.files||!input.files[0]) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=600; const scale=Math.min(1,MAX/Math.max(img.width,img.height));
+      const c=document.createElement('canvas');
+      c.width=img.width*scale; c.height=img.height*scale;
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      logoDataUrl=c.toDataURL('image/jpeg',0.75);
+      applyLogo(logoDataUrl); markDirty(); toast('✅ Logo cargado');
+    };
+    img.src=e.target.result;
+  };
   r.readAsDataURL(input.files[0]);
 }
-function delImg(s, i, idx) { quoteData[s].items[i].images.splice(idx,1); render(); scheduleSave(); }
+function applyLogo(src){
+  if(!src) return;
+  const zone=document.getElementById('logo-zone');
+  let img=zone.querySelector('img');
+  if(!img){img=document.createElement('img');zone.appendChild(img);}
+  img.src=src;
+  document.getElementById('logo-hint').style.display='none';
+}
+function clearLogo(){
+  const zone=document.getElementById('logo-zone');
+  const img=zone.querySelector('img');
+  if(img) img.remove();
+  document.getElementById('logo-hint').style.display='';
+  logoDataUrl=null; markDirty(); toast('Logo eliminado');
+}
 
-// ═══════════════════════════════════════════
+// ─────────────────────────────────────────────────────────────────
+//  PLACEHOLDERS
+// ─────────────────────────────────────────────────────────────────
+function initPlaceholders(){
+  document.querySelectorAll('[data-placeholder]').forEach(el=>{
+    checkPH(el);
+    el.addEventListener('focus',()=>{ if(el.querySelector('.placeholder-hint')) el.innerHTML=''; });
+    el.addEventListener('blur', ()=>checkPH(el));
+    el.addEventListener('input',()=>markDirty());
+  });
+}
+function checkPH(el){
+  if(!el.innerText.trim())
+    el.innerHTML=`<span class="placeholder-hint">${el.getAttribute('data-placeholder')}</span>`;
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  ALINEACIÓN
+// ─────────────────────────────────────────────────────────────────
+function setAlign(dir){
+  const cmds={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};
+  document.execCommand(cmds[dir]);
+  ['left','center','right','justify'].forEach(d=>{
+    const b=document.getElementById('btn-align-'+d);
+    if(b) b.classList.toggle('active',d===dir);
+  });
+  markDirty();
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  SECCIONES E ÍTEMS
+// ─────────────────────────────────────────────────────────────────
+function addSection(){
+  const t=prompt('Nombre de la sección:','NUEVA SECCIÓN');
+  if(!t) return;
+  quoteData.push({title:t,items:[]}); render(); markDirty();
+}
+function insertSectionBefore(sIdx){
+  const t=prompt('Nombre de la nueva sección:','NUEVA SECCIÓN');
+  if(!t) return;
+  quoteData.splice(sIdx,0,{title:t,items:[]}); render(); markDirty(); toast('✅ Sección insertada');
+}
+function deleteSection(sIdx){
+  if(!confirm('¿Eliminar sección "'+quoteData[sIdx].title+'"?')) return;
+  quoteData.splice(sIdx,1); render(); markDirty();
+}
+function addItem(sIdx){
+  quoteData[sIdx].items.push({cant:1,uni:'PZA',desc:'',pu:0,images:[]}); render(); markDirty();
+}
+function insertItemBefore(sIdx,iIdx){
+  quoteData[sIdx].items.splice(iIdx,0,{cant:1,uni:'PZA',desc:'',pu:0,images:[]}); render(); markDirty(); toast('✅ Concepto insertado');
+}
+function deleteItem(sIdx,iIdx){
+  quoteData[sIdx].items.splice(iIdx,1); render(); markDirty();
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  IMÁGENES — guardadas como base64 DENTRO del JSON
+//  (sin IDB, sin límites de cache — el archivo JSON en disco
+//   puede ser de cualquier tamaño)
+// ─────────────────────────────────────────────────────────────────
+function addImg(input, sIdx, iIdx){
+  if(!input.files||!input.files[0]) return;
+  const file=input.files[0];
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=900;
+      const scale=img.width>MAX?MAX/img.width:1;
+      const c=document.createElement('canvas');
+      c.width=Math.round(img.width*scale); c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      const dataUrl=c.toDataURL('image/jpeg',0.70);
+      quoteData[sIdx].items[iIdx].images.push(dataUrl);
+      render(); markDirty();
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function delImg(sIdx,iIdx,imgIdx){
+  quoteData[sIdx].items[iIdx].images.splice(imgIdx,1);
+  render(); markDirty();
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  RENDER
-// ═══════════════════════════════════════════
-function render() {
-  const body = document.getElementById('table-body');
-  body.innerHTML = '';
-  const hint = document.getElementById('empty-hint');
-  hint.style.display = quoteData.length === 0 ? 'block' : 'none';
+// ─────────────────────────────────────────────────────────────────
+function render(){
+  const body=document.getElementById('table-body');
+  body.innerHTML='';
+  document.getElementById('empty-hint').style.display=quoteData.length===0?'block':'none';
 
-  quoteData.forEach((sec, sIdx) => {
-    if (sIdx > 0) body.appendChild(makeInsertZone(sIdx, null, true));
+  quoteData.forEach((sec,sIdx)=>{
+    if(sIdx>0) body.appendChild(makeInsertZone(sIdx,null,true));
 
-    const sr = document.createElement('tr');
-    sr.className = 'row-section';
-    sr.innerHTML = `
+    const sr=document.createElement('tr');
+    sr.className='row-section';
+    sr.innerHTML=`
       <td colspan="7" style="padding-left:14px;">
         <span contenteditable="true" spellcheck="false"
-          oninput="quoteData[${sIdx}].title=this.innerText;scheduleSave();"
+          oninput="quoteData[${sIdx}].title=this.innerText;markDirty();"
           style="outline:none;">${escHtml(sec.title)}</span>
       </td>
       <td class="no-print" style="text-align:center;">
@@ -667,17 +878,16 @@ function render() {
       </td>`;
     body.appendChild(sr);
 
-    sec.items.forEach((item, iIdx) => {
-      if (iIdx > 0) body.appendChild(makeInsertZone(sIdx, iIdx, false));
-
-      const tr = document.createElement('tr');
-      tr.className = 'row-item';
-      const imgs = item.images.map((src, imgIdx) => `
+    sec.items.forEach((item,iIdx)=>{
+      if(iIdx>0) body.appendChild(makeInsertZone(sIdx,iIdx,false));
+      const tr=document.createElement('tr');
+      tr.className='row-item';
+      const imgs=(item.images||[]).map((src,imgIdx)=>`
         <div class="img-thumb">
-          <img src="${src}">
+          <img src="${src}" title="Imagen ${imgIdx+1}">
           <button class="del-img no-print" onclick="delImg(${sIdx},${iIdx},${imgIdx})">✕</button>
         </div>`).join('');
-      tr.innerHTML = `
+      tr.innerHTML=`
         <td class="cell-num">${sIdx+1}.${iIdx+1}</td>
         <td style="width:46px;">
           <div class="cell-edit" contenteditable="true" spellcheck="false"
@@ -685,17 +895,14 @@ function render() {
             oninput="updateNum(${sIdx},${iIdx},this,'cant')">${item.cant}</div>
         </td>
         <td style="width:62px;">
-          <select class="uni-select" id="uni-${sIdx}-${iIdx}" onchange="quoteData[${sIdx}].items[${iIdx}].uni=this.value;scheduleSave();">
-            <option value="PZA">PZA</option>
-            <option value="PZAS">PZAS</option>
-            <option value="MTRS">MTRS</option>
-            <option value="SERV">SERV</option>
-            <option value="KIT">KIT</option>
+          <select class="uni-select" id="uni-${sIdx}-${iIdx}"
+            onchange="quoteData[${sIdx}].items[${iIdx}].uni=this.value;markDirty();">
+            <option>PZA</option><option>PZAS</option><option>MTRS</option><option>SERV</option><option>KIT</option>
           </select>
         </td>
         <td>
           <div class="cell-edit" contenteditable="true" spellcheck="false"
-            oninput="quoteData[${sIdx}].items[${iIdx}].desc=this.innerHTML;scheduleSave();">${item.desc}</div>
+            oninput="quoteData[${sIdx}].items[${iIdx}].desc=this.innerHTML;markDirty();">${item.desc}</div>
         </td>
         <td style="width:110px;">
           <div class="img-cell">
@@ -711,620 +918,247 @@ function render() {
         </td>
         <td class="cell-money" id="t-${sIdx}-${iIdx}">$ 0.00</td>
         <td class="no-print" style="text-align:center;vertical-align:middle;">
-          <button class="del-btn" onclick="deleteItem(${sIdx},${iIdx})" title="Eliminar">✕</button>
+          <button class="del-btn" onclick="deleteItem(${sIdx},${iIdx})">✕</button>
         </td>`;
       body.appendChild(tr);
-      calcRow(sIdx, iIdx);
-      const sel = document.getElementById('uni-'+sIdx+'-'+iIdx);
-      if (sel) sel.value = item.uni || 'PZA';
+      calcRow(sIdx,iIdx);
+      const sel=document.getElementById('uni-'+sIdx+'-'+iIdx);
+      if(sel) sel.value=item.uni||'PZA';
     });
 
-    const ar = document.createElement('tr');
-    ar.className = 'no-print';
-    ar.innerHTML = `<td colspan="8" style="padding:3px 8px;border-bottom:1px solid var(--border);">
-      <button class="add-row-btn" onclick="addItem(${sIdx})">＋ Agregar concepto</button>
-    </td>`;
+    const ar=document.createElement('tr');
+    ar.className='no-print';
+    ar.innerHTML=`<td colspan="8" style="padding:3px 8px;border-bottom:1px solid var(--border);">
+      <button class="add-row-btn" onclick="addItem(${sIdx})">＋ Agregar concepto</button></td>`;
     body.appendChild(ar);
   });
-
   calcTotal();
 }
 
-function makeInsertZone(sIdx, iIdx, isSection) {
-  const tr = document.createElement('tr');
-  tr.className = 'insert-row no-print';
-  const td = document.createElement('td');
-  td.colSpan = 8;
-  td.style.cssText = 'padding:0;border:none;';
-  const zone = document.createElement('div');
-  zone.className = 'insert-zone';
-  if (!isSection) {
-    const btn = document.createElement('button');
-    btn.className = 'iz-btn';
-    btn.innerHTML = '＋ Insertar concepto aquí';
-    btn.onclick = (e) => { e.stopPropagation(); insertItemBefore(sIdx, iIdx); };
+function makeInsertZone(sIdx,iIdx,isSection){
+  const tr=document.createElement('tr');
+  tr.className='insert-row no-print';
+  const td=document.createElement('td'); td.colSpan=8; td.style.cssText='padding:0;border:none;';
+  const zone=document.createElement('div'); zone.className='insert-zone';
+  if(!isSection){
+    const btn=document.createElement('button'); btn.className='iz-btn';
+    btn.innerHTML='＋ Insertar concepto aquí';
+    btn.onclick=e=>{e.stopPropagation();insertItemBefore(sIdx,iIdx);};
     zone.appendChild(btn);
   }
-  const btnSec = document.createElement('button');
-  btnSec.className = isSection ? 'iz-btn' : 'iz-btn-sec';
-  btnSec.innerHTML = isSection ? '＋ Insertar sección aquí' : '＋ Sección';
-  btnSec.onclick = (e) => { e.stopPropagation(); insertSectionBefore(sIdx); };
-  zone.appendChild(btnSec);
-  td.appendChild(zone);
-  tr.appendChild(td);
-  return tr;
+  const btnS=document.createElement('button');
+  btnS.className=isSection?'iz-btn':'iz-btn-sec';
+  btnS.innerHTML=isSection?'＋ Insertar sección aquí':'＋ Sección';
+  btnS.onclick=e=>{e.stopPropagation();insertSectionBefore(sIdx);};
+  zone.appendChild(btnS);
+  td.appendChild(zone); tr.appendChild(td); return tr;
 }
 
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ═══════════════════════════════════════════
+// ─────────────────────────────────────────────────────────────────
 //  CÁLCULOS
-// ═══════════════════════════════════════════
-function updateNum(sIdx, iIdx, el, type) {
-  const v = parseFloat(el.innerText.replace(/[^0-9.]/g,'')) || 0;
-  if (type==='cant') quoteData[sIdx].items[iIdx].cant = v;
-  if (type==='pu')   quoteData[sIdx].items[iIdx].pu   = v;
-  calcRow(sIdx, iIdx);
-  calcTotal();
-  scheduleSave();
+// ─────────────────────────────────────────────────────────────────
+function updateNum(sIdx,iIdx,el,type){
+  const v=parseFloat(el.innerText.replace(/[^0-9.]/g,''))||0;
+  if(type==='cant') quoteData[sIdx].items[iIdx].cant=v;
+  if(type==='pu')   quoteData[sIdx].items[iIdx].pu=v;
+  calcRow(sIdx,iIdx); calcTotal(); markDirty();
 }
-function calcRow(sIdx, iIdx) {
-  const it  = quoteData[sIdx].items[iIdx];
-  const cel = document.getElementById(`t-${sIdx}-${iIdx}`);
-  if (cel) cel.innerText = fmt(it.cant * it.pu);
+function calcRow(sIdx,iIdx){
+  const it=quoteData[sIdx].items[iIdx];
+  const cel=document.getElementById(`t-${sIdx}-${iIdx}`);
+  if(cel) cel.innerText=fmt(it.cant*it.pu);
 }
-function calcTotal() {
-  let g = 0;
-  quoteData.forEach(s => s.items.forEach(i => g += i.cant * i.pu));
-  document.getElementById('sub-total').innerText = fmt(g);
-  const useIva = document.getElementById('iva-check').checked;
-  document.getElementById('iva-row').style.display = useIva ? '' : 'none';
-  document.getElementById('iva-val').innerText = fmt(g * 0.16);
-  document.getElementById('grand-total').innerText = fmt(useIva ? g * 1.16 : g);
-}
-function fmt(n) {
-  return '$ ' + n.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+function calcTotal(){
+  let g=0; quoteData.forEach(s=>s.items.forEach(i=>g+=i.cant*i.pu));
+  document.getElementById('sub-total').innerText=fmt(g);
+  const iva=document.getElementById('iva-check').checked;
+  document.getElementById('iva-row').style.display=iva?'':'none';
+  document.getElementById('iva-val').innerText=fmt(g*.16);
+  document.getElementById('grand-total').innerText=fmt(iva?g*1.16:g);
 }
 
-// ═══════════════════════════════════════════
+// ─────────────────────────────────────────────────────────────────
 //  RECOLECTAR / APLICAR ESTADO
-// ═══════════════════════════════════════════
-function collectState() {
+//  Las imágenes van como base64 dentro del JSON
+//  El JSON se guarda en disco → no hay límite de tamaño
+// ─────────────────────────────────────────────────────────────────
+function collectState(){
   return {
-    quoteId: QUOTE_ID,   // ← ID estable de la cotización
+    version: 3,
     quoteData,
+    logo: logoDataUrl || null,
     iva: document.getElementById('iva-check').checked,
-    fields: {
-      companyInfo:  document.getElementById('company-info').innerHTML,
-      advisorName:  document.getElementById('advisor-name').innerHTML,
-      metaNum:      document.getElementById('meta-num').innerText,
-      metaFecha:    document.getElementById('meta-fecha').innerText,
-      metaClienteId:document.getElementById('meta-cliente-id').innerText,
-      metaValid:    document.getElementById('meta-valid').innerText,
-      clientInfo:   document.getElementById('client-info').innerHTML,
-      introText:    document.getElementById('intro-text').innerHTML,
-      termsBody:    document.getElementById('terms-body').innerHTML,
-      footerAddress:document.getElementById('footer-address').innerHTML,
-      pageFooter:   document.getElementById('page-footer-text').innerHTML,
+    fields:{
+      companyInfo:   document.getElementById('company-info').innerHTML,
+      advisorName:   document.getElementById('advisor-name').innerHTML,
+      metaNum:       document.getElementById('meta-num').innerText,
+      metaFecha:     document.getElementById('meta-fecha').innerText,
+      metaValid:     document.getElementById('meta-valid').innerText,
+      clientInfo:    document.getElementById('client-info').innerHTML,
+      introText:     document.getElementById('intro-text').innerHTML,
+      termsBody:     document.getElementById('terms-body').innerHTML,
+      footerAddress: document.getElementById('footer-address').innerHTML,
+      pageFooter:    document.getElementById('page-footer-text').innerHTML,
     },
     savedAt: new Date().toISOString()
   };
 }
 
-function applyState(state) {
-  if (!state) return;
+function applyState(state){
+  if(!state) return;
   quoteData = state.quoteData || [];
-  if (state.iva) document.getElementById('iva-check').checked = true;
-  const f = state.fields || {};
-  if (f.companyInfo)    document.getElementById('company-info').innerHTML    = f.companyInfo;
-  if (f.advisorName)    document.getElementById('advisor-name').innerHTML    = f.advisorName;
-  if (f.metaNum)        document.getElementById('meta-num').innerText        = f.metaNum;
-  if (f.metaFecha)      document.getElementById('meta-fecha').innerText      = f.metaFecha;
-  if (f.metaClienteId)  document.getElementById('meta-cliente-id').innerText = f.metaClienteId;
-  if (f.metaValid)      document.getElementById('meta-valid').innerText      = f.metaValid;
-  if (f.clientInfo)     document.getElementById('client-info').innerHTML     = f.clientInfo;
-  if (f.introText)      document.getElementById('intro-text').innerHTML      = f.introText;
-  if (f.termsBody)      document.getElementById('terms-body').innerHTML      = f.termsBody;
-  if (f.footerAddress)  document.getElementById('footer-address').innerHTML  = f.footerAddress;
-  if (f.pageFooter)     document.getElementById('page-footer-text').innerHTML= f.pageFooter;
-  render();
-}
 
-// ═══════════════════════════════════════════
-//  GUARDADO AUTOMÁTICO EN localStorage
-// ═══════════════════════════════════════════
-function scheduleSave() {
-  setSaveDot('saving', 'Guardando...');
-  isDirty = true;
-  jsonExported = false;
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(doSave, 2000);
-}
+  // Asegurar que images[] siempre existe en cada item
+  quoteData.forEach(sec => sec.items.forEach(item => {
+    if(!item.images) item.images=[];
+  }));
 
-function doSave() {
-  try {
-    const state = collectState();
-    const key   = storageKey();
+  if(state.iva) document.getElementById('iva-check').checked=true;
+  else          document.getElementById('iva-check').checked=false;
 
-    const json = JSON.stringify(state);
+  if(state.logo){ logoDataUrl=state.logo; applyLogo(state.logo); }
+  else { logoDataUrl=null; clearLogo(); }
 
-    // 🔴 DEBUG: tamaño del JSON
-    console.log('Guardando clave:', key);
-    console.log('Tamaño JSON:', json.length);
-
-    localStorage.setItem(key, json);
-
-    // 🔴 DEBUG: verificar
-    const verify = localStorage.getItem(key);
-    if (!verify) throw new Error('No se pudo leer después de guardar');
-
-    console.log('Guardado OK');
-
-    sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-
-    const ts = new Date().toLocaleTimeString('es-MX',{
-      hour:'2-digit',minute:'2-digit',second:'2-digit'
-    });
-
-    setSaveDot('saved', 'Guardado');
-    document.getElementById('save-time').textContent = ts;
-
-    isDirty = false;
-
-  } catch(e) {
-    console.error('🔥 ERROR REAL:', e);
-
-    setSaveDot('error', 'Error al guardar');
-
-    toast('⚠️ Error: ' + (e.message || e));
-
-    showDebugError(e); // 👈 nueva función
-  }
-}
-function showDebugError(err) {
-  const box = document.getElementById('debug-console');
-  box.style.display = 'block';
-
-  const msg = `[${new Date().toLocaleTimeString()}] ERROR:\n${err.stack || err}\n\n`;
-
-  box.innerText += msg;
-  box.scrollTop = box.scrollHeight;
-}
-function manualSave() {
-  clearTimeout(saveTimer);
-  doSave();
-  toast('💚 Guardado');
-}
-
-function clearCurrentSession() {
-  if (!confirm('¿Limpiar esta hoja y comenzar una cotización en blanco?\n(No afecta otras cotizaciones guardadas)')) return;
-  // Borrar la cotización actual del storage
-  try { localStorage.removeItem(storageKey()); } catch(e){}
-  // Generar un ID nuevo → hoja en blanco independiente
-  QUOTE_ID = genQuoteId();
-  sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-  quoteData = [];
-  render();
-  ['company-info','advisor-name','meta-num','meta-fecha','meta-cliente-id',
-   'meta-valid','client-info','intro-text','footer-address','page-footer-text'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.innerHTML = ''; checkPlaceholder(el); }
-  });
-  document.getElementById('iva-check').checked = false;
-  // Poner fecha por defecto
-  const hoy = new Date();
-  const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
-  document.getElementById('meta-fecha').textContent = fmtD(hoy);
-  const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
-  document.getElementById('meta-valid').textContent = fmtD(valid);
-  setSaveDot('','Sin cambios');
-  document.getElementById('save-time').textContent = '';
-  isDirty = false;
-  jsonExported = false;
-  toast('🗑 Hoja limpia — nueva cotización en blanco');
-}
-
-function setSaveDot(state, label) {
-  const dot = document.getElementById('save-dot');
-  const lbl = document.getElementById('save-label');
-  dot.className = 'dot' + (state ? ' ' + state : '');
-  lbl.textContent = label;
-}
-
-// ═══════════════════════════════════════════
-//  AVISO AL CERRAR / RECARGAR PESTAÑA
-// ═══════════════════════════════════════════
-// Strategy:
-//  • Si hay cambios sin guardar en localStorage → guardar antes de morir
-//  • El "aviso real" es sobre el JSON: si no se ha exportado como archivo,
-//    mostrar modal personalizado antes de cerrar
-//  • NO usamos el beforeunload nativo (solo muestra texto genérico y
-//    muchos navegadores ya no lo respetan en file://)
-//  • En su lugar interceptamos los enlaces y el botón cerrar con un
-//    modal propio. Para el cierre real de pestaña/ventana usamos
-//    beforeunload de forma mínima solo para guardar el estado.
-
-let _allowClose = false; // bandera para permitir cierre después de confirmar
-
-window.addEventListener('beforeunload', (e) => {
-  // Siempre guardar si hay cambios pendientes
-  if (isDirty) {
-    clearTimeout(saveTimer);
-    doSave();
-  }
-  // Si no se ha exportado el JSON y hay datos, mostrar advertencia nativa
-  // (como respaldo; el modal personalizado es el flujo principal)
-  if (!_allowClose && !jsonExported && (quoteData.length > 0 || isDirty)) {
-    e.preventDefault();
-    e.returnValue = '¿Seguro que quieres cerrar? No has exportado el JSON de respaldo.';
-    return e.returnValue;
-  }
-});
-
-// Modal personalizado de cierre — se invoca desde el botón "✕" del navegador
-// NO podemos interceptar el botón X del navegador directamente, pero sí
-// podemos usarlo como pantalla de confirmación cuando el usuario hace
-// clic en "Cerrar pestaña" desde nuestra UI, o cuando usa Ctrl+W.
-// La advertencia nativa de beforeunload es el respaldo para ese caso.
-
-function showCloseModal() {
-  document.getElementById('close-modal').classList.add('visible');
-}
-function closeModal() {
-  document.getElementById('close-modal').classList.remove('visible');
-}
-function saveJSONAndClose() {
-  saveJSON();
-  _allowClose = true;
-  window.close();
-  // Si window.close() no funciona (pestaña no abierta por script), solo cerramos el modal
-  setTimeout(() => {
-    closeModal();
-    toast('✅ JSON exportado. Puedes cerrar la pestaña.');
-    _allowClose = false;
-  }, 500);
-}
-function forceClose() {
-  _allowClose = true;
-  closeModal();
-  // Intentar cerrar; si no se puede, solo notificar
-  window.close();
-  setTimeout(() => { _allowClose = false; }, 1000);
-}
-
-// Atajo de teclado: Ctrl+W → modal personalizado en lugar del cierre nativo
-window.addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'w') {
-    if (!jsonExported && quoteData.length > 0) {
-      e.preventDefault();
-      showCloseModal();
-    }
-  }
-});
-
-// ═══════════════════════════════════════════
-//  NUEVA PESTAÑA / DUPLICAR
-// ═══════════════════════════════════════════
-function newBlankTab() {
-  // Abrir el mismo archivo sin parámetros → hoja en blanco con ID nuevo
-  const base = location.href.split('#')[0].split('?')[0];
-  window.open(base, '_blank');
-}
-
-function duplicateTab() {
-  // Guardar el estado actual bajo una clave temporal con un NUEVO quoteId
-  const state = collectState();
-  const newId = genQuoteId();
-  state.quoteId = newId; // nuevo ID → cotización independiente
-  const tmpKey = COT_PREFIX + newId;
-  try {
-    localStorage.setItem(tmpKey, JSON.stringify(state));
-  } catch(e) {
-    alert('No se pudo duplicar: localStorage no disponible'); return;
-  }
-  const base = location.href.split('#')[0].split('?')[0];
-  window.open(base + '?load=' + encodeURIComponent(newId), '_blank');
-  toast('📋 Duplicando en nueva pestaña…');
-}
-
-// ═══════════════════════════════════════════
-//  GESTOR DE SESIONES
-// ═══════════════════════════════════════════
-function getAllSessions() {
-  const sessions = [];
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k && k.startsWith(COT_PREFIX)) {
-      try {
-        const s = JSON.parse(localStorage.getItem(k));
-        if (s) sessions.push({ key: k, data: s });
-      } catch(e) {}
-    }
-  }
-  sessions.sort((a,b) => new Date(b.data.savedAt||0) - new Date(a.data.savedAt||0));
-  return sessions;
-}
-
-function showSessionManager() {
-  const list = document.getElementById('session-list');
-  list.innerHTML = '';
-  const sessions = getAllSessions();
-  if (sessions.length === 0) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">No hay cotizaciones guardadas.</p>';
-  } else {
-    sessions.forEach(({ key, data }) => {
-      const isActive = (data.quoteId === QUOTE_ID);
-      const clientText = data.fields?.clientInfo
-        ? new DOMParser().parseFromString(data.fields.clientInfo,'text/html').body.innerText.trim().slice(0,40) || '(sin cliente)'
-        : '(sin cliente)';
-      const numText = data.fields?.metaNum || '—';
-      const fecha   = data.savedAt ? new Date(data.savedAt).toLocaleString('es-MX') : '—';
-
-      const card = document.createElement('div');
-      card.style.cssText = `
-        border:1.5px solid ${isActive ? 'var(--green)' : 'var(--border)'};
-        border-radius:10px;padding:12px 14px;
-        background:${isActive ? 'var(--green-light)' : '#fafafa'};
-        display:flex;justify-content:space-between;align-items:center;gap:10px;
-      `;
-      card.innerHTML = `
-        <div style="flex:1;min-width:0;">
-          <div style="font-weight:700;font-size:12px;color:var(--green-dark);">
-            ${isActive ? '🟢 ' : ''}N° ${escHtml(numText)}
-            ${isActive ? '<span style="font-size:9px;color:var(--green);margin-left:6px;">(esta pestaña)</span>' : ''}
-          </div>
-          <div style="font-size:10.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-            ${escHtml(clientText)}
-          </div>
-          <div style="font-size:9px;color:var(--muted);margin-top:3px;">💾 ${fecha}</div>
-          <div style="font-size:8px;color:rgba(107,114,128,.5);font-family:'DM Mono',monospace;margin-top:1px;">${data.quoteId || key}</div>
-        </div>
-        <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
-          ${!isActive ? `
-          <button onclick="loadSessionHere('${data.quoteId || key}')"
-            style="background:var(--green);color:#fff;border:none;border-radius:7px;
-                   padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
-            Abrir aquí
-          </button>
-          <button onclick="loadSessionNewTab('${data.quoteId || key}')"
-            style="background:var(--green-dark);color:#fff;border:none;border-radius:7px;
-                   padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
-            Nueva pestaña
-          </button>` : '<span style="font-size:10px;color:var(--green);align-self:center;">Activa</span>'}
-          <button onclick="deleteSession('${data.quoteId || key}', '${key}')"
-            style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;
-                   padding:6px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
-            🗑
-          </button>
-        </div>
-      `;
-      list.appendChild(card);
-    });
-  }
-  document.getElementById('session-modal').classList.add('visible');
-}
-
-function closeSessionManager() {
-  document.getElementById('session-modal').classList.remove('visible');
-}
-
-function loadSessionHere(quoteId) {
-  if (!confirm('¿Cargar esta cotización en la pestaña actual?\nSe guardarán primero los cambios de la cotización activa.')) return;
-  // Guardar estado actual antes de cambiar
-  clearTimeout(saveTimer);
-  doSave();
-
-  const key = COT_PREFIX + quoteId;
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) { alert('No se encontró la cotización.'); return; }
-    const state = JSON.parse(raw);
-    // Cambiar el QUOTE_ID activo a esta pestaña
-    QUOTE_ID = quoteId;
-    sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-    applyState(state);
-    closeSessionManager();
-    isDirty = false;
-    jsonExported = false;
-    setSaveDot('saved', 'Cargada');
-    const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
-    document.getElementById('save-time').textContent = ts;
-    toast('✅ Cotización cargada');
-  } catch(e) { alert('Error al cargar: ' + e.message); }
-}
-
-function loadSessionNewTab(quoteId) {
-  const base = location.href.split('#')[0].split('?')[0];
-  window.open(base + '?load=' + encodeURIComponent(quoteId), '_blank');
-  closeSessionManager();
-  toast('📂 Abriendo en nueva pestaña…');
-}
-
-function deleteSession(quoteId, key) {
-  if (quoteId === QUOTE_ID) {
-    alert('No puedes eliminar la cotización activa desde aquí.\nUsa "Limpiar esta hoja" para comenzar de nuevo.');
-    return;
-  }
-  if (!confirm('¿Eliminar esta cotización guardada? Esta acción no se puede deshacer.')) return;
-  localStorage.removeItem(key);
-  showSessionManager();
-  toast('🗑 Cotización eliminada');
-}
-
-// ═══════════════════════════════════════════
-//  EXPORT / IMPORT JSON
-// ═══════════════════════════════════════════
-function saveJSON() {
-  const state = collectState();
-  const numVal = document.getElementById('meta-num').innerText.trim() || QUOTE_ID;
-  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'cotizacion_' + numVal.replace(/[^a-zA-Z0-9_-]/g,'_') + '.json';
-  a.click();
-  jsonExported = true;
-  toast('📥 Exportada como JSON');
-}
-
-function loadJSON(input) {
-  if (!input.files || !input.files[0]) return;
-  const r = new FileReader();
-  r.onload = e => {
-    try {
-      const state = JSON.parse(e.target.result);
-      // Si el JSON tiene un quoteId, usarlo para no duplicar en storage
-      if (state.quoteId) {
-        QUOTE_ID = state.quoteId;
-        sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-      }
-      applyState(state);
-      isDirty = false;
-      jsonExported = true;
-      scheduleSave(); // guardar en localStorage con el ID correcto
-      toast('✅ Cotización cargada desde JSON');
-    } catch { alert('Archivo JSON inválido'); }
+  const f=state.fields||{};
+  const set=(id,val,html)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(html) el.innerHTML=val||'';
+    else     el.innerText=val||'';
   };
-  r.readAsText(input.files[0]);
+  set('company-info',  f.companyInfo,   true);
+  set('advisor-name',  f.advisorName,   true);
+  set('meta-num',      f.metaNum,       false);
+  set('meta-fecha',    f.metaFecha,     false);
+  set('meta-valid',    f.metaValid,     false);
+  set('client-info',   f.clientInfo,    true);
+  set('intro-text',    f.introText,     true);
+  set('terms-body',    f.termsBody,     true);
+  set('footer-address',f.footerAddress, true);
+  set('page-footer-text',f.pageFooter,  true);
 }
 
-// ═══════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2800);
+function resetDoc(){
+  quoteData=[];
+  logoDataUrl=null;
+  clearLogo();
+  ['company-info','advisor-name','meta-num','meta-fecha','meta-valid',
+   'client-info','intro-text','footer-address','page-footer-text'].forEach(id=>{
+    const el=document.getElementById(id); if(el){ el.innerHTML=''; checkPH(el); }
+  });
+  document.getElementById('iva-check').checked=false;
+  // Restaurar términos por defecto
+  document.getElementById('terms-body').innerHTML=`<ol>
+    <li>Cotización en moneda nacional.</li>
+    <li>Precio NO incluye IVA. En caso de requerir factura, notificarlo al número o correo electrónico estipulado en este documento y se aumentará el 16% del costo final del proyecto.</li>
+    <li>En caso de requerir trabajos extras de esta cotización, se cargará al momento del cobro.</li>
+    <li>Se solicita el 60% de anticipo al aprobar el proyecto.</li>
+    <li>Tiempo de ejecución de acuerdo a la obra.</li>
+    <li>Garantía de equipos instalados 24 meses a partir de la fecha de entrega.</li>
+    <li>Tiempo de entrega de equipos de 3 a 15 días después del primer pago, dependiendo de la disponibilidad en almacenes.</li>
+  </ol>`;
+  initBlankDates();
+  currentHandle=null;
+  clearHandle().catch(()=>{});
+  isDirty=false;
+  setSaveDot('nosave');
+  document.getElementById('save-title').textContent='Sin archivo';
+  document.getElementById('save-sub').textContent='Usa "Guardar como" para elegir dónde guardar';
+  document.getElementById('folder-chip').classList.remove('visible');
+  render();
+  toast('📄 Nueva cotización en blanco');
 }
 
-// ═══════════════════════════════════════════
+function initBlankDates(){
+  const hoy=new Date();
+  const fmtD=d=>d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('meta-fecha').textContent=fmtD(hoy);
+  const v=new Date(hoy); v.setDate(v.getDate()+30);
+  document.getElementById('meta-valid').textContent=fmtD(v);
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  PIE DE PÁGINA IMPRESIÓN
+// ─────────────────────────────────────────────────────────────────
+function syncPrintFooter(){
+  const src=document.getElementById('page-footer-text');
+  const dst=document.getElementById('print-footer-fixed');
+  if(!src||!dst) return;
+  dst.innerHTML=src.querySelector('.placeholder-hint')?'':src.innerHTML;
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  INIT
-// ═══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+// ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async ()=>{
   initPlaceholders();
 
-  document.getElementById('page-footer-text').addEventListener('input', scheduleSave);
-  ['meta-num','meta-fecha','meta-cliente-id','meta-valid'].forEach(id => {
-    document.getElementById(id).addEventListener('input', scheduleSave);
+  document.getElementById('page-footer-text').addEventListener('input',()=>{ markDirty(); syncPrintFooter(); });
+  ['meta-num','meta-fecha','meta-valid'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', markDirty);
   });
-  document.getElementById('terms-body').addEventListener('input', scheduleSave);
-
-  // Logo compartido
-  try {
-    const logo = localStorage.getItem(LOGO_KEY);
-    if (logo) applyLogo(logo);
-  } catch(e){}
-
-  // ── DECIDIR QUÉ COTIZACIÓN CARGAR ──────────────────────────────
-
-  if (_loadParam) {
-    // Abrir cotización existente (desde gestor o duplicar)
-    const existingKey = COT_PREFIX + _loadParam;
-    try {
-      const raw = localStorage.getItem(existingKey);
-      if (raw) {
-        const state = JSON.parse(raw);
-        QUOTE_ID = state.quoteId || _loadParam;
-        sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-        applyState(state);
-        isDirty = false;
-        setSaveDot('saved', 'Cargada');
-        const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
-        document.getElementById('save-time').textContent = ts;
-        toast('📂 Cotización cargada');
-      } else {
-        throw new Error('No encontrada en storage');
-      }
-    } catch(e) {
-      toast('⚠️ No se pudo cargar la cotización: ' + e.message);
-      QUOTE_ID = genQuoteId();
-      sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-      initBlank();
-    }
-    // Limpiar URL
-    history.replaceState({}, '', location.href.split('?')[0]);
-    render();
-    setSaveDot('saved','Cargada');
-    syncPrintFooter();
-    return;
-  }
-
-  if (_cloneParam) {
-    // Ya no se usa este parámetro (se reemplazó por ?load con ID nuevo),
-    // pero por compatibilidad lo dejamos como alias
-    const base = location.href.split('#')[0].split('?')[0];
-    history.replaceState({}, '', base);
-  }
-
-  // ── Sin parámetros: intentar restaurar sesión de esta pestaña ──
-  const savedQuoteId = sessionStorage.getItem('dimcer_active_quote');
-  if (savedQuoteId) {
-    const key = COT_PREFIX + savedQuoteId;
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) {
-        const state = JSON.parse(raw);
-        QUOTE_ID = savedQuoteId;
-        applyState(state);
-        isDirty = false;
-        setSaveDot('saved', 'Restaurada');
-        const ts = state.savedAt ? new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}) : '';
-        document.getElementById('save-time').textContent = ts;
-        toast('✅ Sesión restaurada');
-        render();
-        syncPrintFooter();
-        return;
-      }
-    } catch(e) { console.error('Error restaurando sesión:', e); }
-  }
-
-  // ── Hoja completamente en blanco ──
-  QUOTE_ID = genQuoteId();
-  sessionStorage.setItem('dimcer_active_quote', QUOTE_ID);
-  initBlank();
-  render();
-  setSaveDot('', 'Sin cambios');
-  syncPrintFooter();
-
-  // ─────────────────────────────────────────────────────────────
-  function initBlank() {
-    const hoy  = new Date();
-    const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
-    document.getElementById('meta-fecha').textContent = fmtD(hoy);
-    const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
-    document.getElementById('meta-valid').textContent = fmtD(valid);
-  }
-
-  function syncPrintFooter() {
-    const src = document.getElementById('page-footer-text');
-    const dst = document.getElementById('print-footer-fixed');
-    if (!dst) return;
-    const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
-    dst.innerHTML = html || '';
-  }
-});
-
-// Sync pie de página para impresión
-function syncPrintFooter() {
-  const src = document.getElementById('page-footer-text');
-  const dst = document.getElementById('print-footer-fixed');
-  if (!dst || !src) return;
-  const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
-  dst.innerHTML = html || '';
-}
-document.addEventListener('DOMContentLoaded', () => {
-  const pfEl = document.getElementById('page-footer-text');
-  if (pfEl) pfEl.addEventListener('input', syncPrintFooter);
+  document.getElementById('terms-body').addEventListener('input', markDirty);
   window.addEventListener('beforeprint', syncPrintFooter);
 
-  // Cerrar modales con clic fuera
-  document.getElementById('session-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeSessionManager();
+  // Cerrar modales al clic fuera
+  document.querySelectorAll('.modal-bg').forEach(el=>{
+    el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('visible'); });
   });
-  document.getElementById('close-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+
+  // Selección de alineación
+  document.addEventListener('selectionchange',()=>{
+    const map={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};
+    Object.entries(map).forEach(([d,cmd])=>{
+      const b=document.getElementById('btn-align-'+d);
+      if(b) b.classList.toggle('active',document.queryCommandState(cmd));
+    });
   });
+
+  // Detectar soporte
+  if(!FS_SUPPORT){
+    // Firefox/Safari: cambiar textos de botones
+    document.getElementById('btn-guardar').textContent='💾 Descargar JSON';
+    document.getElementById('btn-guardarcomo').style.display='none';
+    // No mostrar modal de no soporte automáticamente; solo informar en status
+    setSaveDot('nosave');
+    document.getElementById('save-title').textContent='Modo Firefox/Safari';
+    document.getElementById('save-sub').textContent='El archivo se descargará manualmente';
+  }
+
+  // Intentar recuperar el handle de la última sesión
+  if(FS_SUPPORT){
+    try{
+      const h = await loadHandle();
+      if(h){
+        // Verificar que el usuario sigue teniendo permiso
+        const perm = await h.queryPermission({mode:'readwrite'});
+        if(perm==='granted'){
+          // Re-abrir el archivo automáticamente
+          const file = await h.getFile();
+          const text = await file.text();
+          const state = JSON.parse(text);
+          applyState(state);
+          render();
+          currentHandle=h;
+          isDirty=false;
+          setSaveDot('ok');
+          document.getElementById('save-title').textContent='✅ '+h.name;
+          document.getElementById('save-sub').textContent='Restaurado automáticamente';
+          document.getElementById('folder-chip').textContent='📄 '+h.name;
+          document.getElementById('folder-chip').classList.add('visible');
+          syncPrintFooter();
+          toast('✅ '+h.name+' restaurado');
+          return;
+        }
+      }
+    } catch(e){ /* no hay handle previo o no hay permiso */ }
+  }
+
+  // Sin handle previo → hoja en blanco
+  initBlankDates();
+  render();
+  setSaveDot('nosave');
+  syncPrintFooter();
 });
 </script>
 </body>
