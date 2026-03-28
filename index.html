@@ -27,7 +27,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 /* ── SIDEBAR ── */
 #toolbar{
   position:fixed;top:0;left:0;width:220px;height:100vh;
-  background:rgb(4, 4, 66);padding:24px 16px;
+  background:rgb(8, 8, 51);padding:24px 16px;
   display:flex;flex-direction:column;gap:7px;z-index:100;
   box-shadow:4px 0 24px rgba(0,0,0,.2);overflow-y:auto;
 }
@@ -121,7 +121,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   margin-top:10px;border:2px solid var(--green);border-radius:var(--radius);
   overflow:hidden;min-width:210px;
 }
-.meta-row{display:grid;grid-template-columns:80px 1fr;font-size:10.5px;}
+.meta-row{display:grid; grid-template-columns: 120px 1fr;font-size:10.5px;}
 .meta-row+.meta-row{border-top:1px solid var(--green-light);}
 .meta-key{
   background:var(--green-light);color:var(--green-dark);font-weight:700;
@@ -162,7 +162,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   border-radius:var(--radius);overflow:hidden;
 }
 #quote-table thead tr th{
-  background:var(--green-dark);color:#fff;
+  background:var(--green);color:#fff;
   font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   padding:9px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.12);
 }
@@ -200,11 +200,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 }
 .del-btn:hover{color:var(--red);background:#fee2e2;}
 
+/* ── INSERT ZONE (pantalla) ── */
+.insert-zone{
+  position:relative;height:6px;cursor:pointer;
+  transition:height var(--transition);
+}
+.insert-zone:hover{height:22px;}
+.insert-zone::after{
+  content:'';position:absolute;left:0;right:0;top:50%;
+  height:2px;background:transparent;
+  border-top:2px dashed transparent;
+  transition:border-color var(--transition);
+}
+.insert-zone:hover::after{border-color:var(--green);}
+.insert-zone .iz-btn{
+  display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:var(--green);color:#fff;border:none;border-radius:20px;
+  font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;
+  white-space:nowrap;gap:4px;align-items:center;
+}
+.insert-zone:hover .iz-btn{display:flex;}
+.insert-zone .iz-btn-sec{
+  display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:var(--green-dark);color:#fff;border:none;border-radius:20px;
+  font-size:9px;font-weight:700;padding:3px 10px;cursor:pointer;
+  white-space:nowrap;align-items:center;gap:3px;
+}
+.insert-zone:hover .iz-btn-sec{display:flex;}
+
+/* filas de zona inserción — no tiene borde visible */
+tr.insert-row td{padding:0 !important;border:none !important;background:transparent !important;}
+
 /* ── IMÁGENES — más grandes en pantalla ── */
 .img-cell{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .img-thumb{position:relative;}
 .img-thumb img{
-  width:72px;height:72px;   /* ← antes 48×48, ahora 72×72 */
+  width:72px;height:72px;
   object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block;
 }
 .del-img{
@@ -213,7 +244,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   font-size:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;
 }
 .add-img-btn{
-  width:72px;height:72px;   /* ← igual que las thumbs */
+  width:72px;height:72px;
   border:2px dashed var(--border);border-radius:6px;
   background:var(--bg);display:flex;align-items:center;justify-content:center;
   cursor:pointer;color:var(--muted);font-size:22px;
@@ -294,9 +325,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 /* ── PIE FIJO EN IMPRESIÓN (se repite cada hoja) ── */
 #print-footer-fixed{display:none;}
 @media print{
-  /* reservar espacio al fondo de cada página */
   @page{ margin-bottom:2cm; }
-
   #print-footer-fixed{
     display:block !important;
     position:fixed;
@@ -321,37 +350,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   @page {
     margin: 1cm 1.2cm;
     size: A4;
-    /* Suprimir encabezado/pie de página del navegador (URL, fecha, nº página) */
     -webkit-print-color-adjust: exact;
   }
-
-  /* Eliminar cualquier "running header/footer" del navegador */
   @page :first { margin-top: 1cm; }
-
   *, *::before, *::after {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-
-  /* ocultar elementos de UI */
   #toolbar, .no-print { display: none !important; }
-
   body { background: white !important; }
-
   #wrapper {
     margin-left: 0 !important;
     padding: 0 !important;
     display: block !important;
   }
-
   .paper {
     border-radius: 0 !important;
     box-shadow: none !important;
     max-width: 100% !important;
     width: 100% !important;
   }
-
-  /* ── TABLA ── */
   #quote-table {
     width: 100% !important;
     table-layout: fixed !important;
@@ -359,42 +377,54 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     border-radius: 0 !important;
     border-collapse: collapse !important;
   }
-
   #quote-table thead {
     display: table-row-group !important;
   }
-
-  /* Anchos de columna para A4 (~190mm útiles) */
-  #quote-table thead tr th:nth-child(1) { width: 20pt !important; }
-  #quote-table thead tr th:nth-child(2) { width: 24pt !important; }
+  #quote-table thead tr th:nth-child(1) { width: 25pt !important; }
+  #quote-table thead tr th:nth-child(2) { width: 38pt !important; }
   #quote-table thead tr th:nth-child(3) { width: 28pt !important; }
   #quote-table thead tr th:nth-child(4) { width: auto !important; }
-  #quote-table thead tr th:nth-child(5) { width: 64pt !important; }  /* col imagen — más ancha */
-  #quote-table thead tr th:nth-child(6) { width: 46pt !important; }
-  #quote-table thead tr th:nth-child(7) { width: 52pt !important; }
+  #quote-table thead tr th:nth-child(5) { width: 64pt !important; }
+#quote-table tbody tr td:nth-child(6) {
+  text-align: right !important;
+  font-family: 'DM Mono', monospace !important;
+  white-space: nowrap !important;
+  position: relative;
+  padding-left: 14pt !important;
+  font-variant-numeric: tabular-nums;
+}
 
+#quote-table tbody tr td:nth-child(6)::before {
+  content: "$";
+  position: absolute;
+  left: 4pt;
+}
+  #quote-table thead tr th:nth-child(6) { width: 60pt !important; } /* P.U */
+#quote-table tbody tr td:nth-child(7) {
+  text-align: right !important;
+  font-family: 'DM Mono', monospace !important;
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums;
+  padding-right: 6pt !important;
+}
   #quote-table td, #quote-table th {
     min-width: 0 !important;
     padding: 5pt 5pt !important;
     overflow: hidden !important;
   }
-
   .cell-edit {
     word-break: break-word !important;
     white-space: normal !important;
     overflow-wrap: break-word !important;
   }
-
   .cell-money {
     white-space: nowrap !important;
     font-size: 8pt !important;
   }
-
-  /* ── IMÁGENES EN IMPRESIÓN — contener dentro de la celda ── */
   .img-cell {
     gap: 3pt !important;
     flex-wrap: wrap !important;
-    max-width: 60pt !important;   /* no puede exceder la columna */
+    max-width: 60pt !important;
     overflow: hidden !important;
   }
   .img-thumb img {
@@ -404,15 +434,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
     object-fit: cover !important;
     display: block !important;
   }
-
-  /* Filas */
   .row-item { page-break-inside: avoid; }
   .row-section { page-break-after: avoid; }
-
-  /* Secciones */
   .doc-header, .subtotals-wrap, .terms-wrap, .doc-footer { page-break-inside: avoid; }
-
-  /* Limpiar interactividad visual */
   .cell-edit:hover, .cell-edit:focus,
   .terms-body:hover, .terms-body:focus,
   .footer-address:hover, .footer-address:focus,
@@ -421,18 +445,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   .meta-val:hover, .meta-val:focus,
   .intro-text:hover, .intro-text:focus,
   .editable-subtle:hover, .editable-subtle:focus { background: transparent !important; }
-
   .logo-zone { border: none !important; background: transparent !important; }
   .add-row-btn, .del-btn, .add-img-btn, .del-img { display: none !important; }
-
   .uni-select {
     -webkit-appearance: none !important;
     background: transparent !important;
     border: none !important;
     font-size: 8pt !important;
   }
-
-  /* Padding de secciones */
   .doc-header     { padding: 12pt 14pt 10pt !important; }
   .table-wrap     { padding: 0 14pt 10pt !important; overflow: visible !important; }
   .subtotals-wrap { padding: 0 14pt 10pt !important; }
@@ -444,6 +464,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   .page-footer-editor { border-top: 1.5pt solid var(--green) !important; padding: 0 !important; display: none !important; }
   .page-footer-inner { font-size: 7pt !important; color: #555 !important; }
   .placeholder-hint { display: none !important; }
+  /* Ocultar filas de inserción en impresión */
+  tr.insert-row { display: none !important; }
 }
 </style>
 </head>
@@ -451,14 +473,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 
 <!-- SIDEBAR -->
 <nav id="toolbar" class="no-print">
-  <!--<div class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>-->
-  <div class="brand">⚡ DIMCER</div>
+  <div style="display: none;" class="brand">⚡ DIMCER<small>Generador de Cotizaciones</small></div>
 
   <div class="tlabel">Formato</div>
   <button onclick="document.execCommand('bold')"><span class="icon">𝐁</span> Negritas</button>
   <button onclick="document.execCommand('italic')"><span class="icon"><i>I</i></span> Cursiva</button>
 
-  <!-- ALINEACIÓN DE TEXTO -->
   <div class="tlabel">Alineación</div>
   <div class="align-row">
     <button id="btn-align-left"    title="Izquierda" onclick="setAlign('left')"    class="icon">⬅</button>
@@ -712,7 +732,6 @@ const ALIGN_CMDS = {
 
 function setAlign(dir) {
   document.execCommand(ALIGN_CMDS[dir]);
-  // Marcar botón activo visualmente
   ['left','center','right','justify'].forEach(d => {
     const b = document.getElementById('btn-align-' + d);
     if (b) b.classList.toggle('active', d === dir);
@@ -720,7 +739,6 @@ function setAlign(dir) {
   scheduleSave();
 }
 
-// Actualizar estado de botones al mover el cursor
 document.addEventListener('selectionchange', () => {
   const map = {
     left:    document.queryCommandState('justifyLeft'),
@@ -735,8 +753,10 @@ document.addEventListener('selectionchange', () => {
 });
 
 // ═══════════════════════════════════════════
-//  SECTIONS & ITEMS
+//  SECTIONS & ITEMS — CON INSERCIÓN EN MEDIO
 // ═══════════════════════════════════════════
+
+/** Agregar sección AL FINAL */
 function addSection() {
   const t = prompt('Nombre de la sección:', 'NUEVA SECCIÓN');
   if (!t) return;
@@ -744,14 +764,35 @@ function addSection() {
   render();
   scheduleSave();
 }
+
+/** Insertar sección ANTES del índice sIdx */
+function insertSectionBefore(sIdx) {
+  const t = prompt('Nombre de la nueva sección:', 'NUEVA SECCIÓN');
+  if (!t) return;
+  quoteData.splice(sIdx, 0, { title: t, items: [] });
+  render();
+  scheduleSave();
+  toast('✅ Sección insertada');
+}
+
 function deleteSection(sIdx) {
   if (!confirm('¿Eliminar sección "' + quoteData[sIdx].title + '"?')) return;
   quoteData.splice(sIdx, 1); render(); scheduleSave();
 }
+
+/** Agregar concepto AL FINAL de la sección */
 function addItem(sIdx) {
   quoteData[sIdx].items.push({ cant:1, uni:'PZA', desc:'', pu:0, images:[] });
   render(); scheduleSave();
 }
+
+/** Insertar concepto ANTES del índice iIdx dentro de sección sIdx */
+function insertItemBefore(sIdx, iIdx) {
+  quoteData[sIdx].items.splice(iIdx, 0, { cant:1, uni:'PZA', desc:'', pu:0, images:[] });
+  render(); scheduleSave();
+  toast('✅ Concepto insertado');
+}
+
 function deleteItem(sIdx, iIdx) {
   quoteData[sIdx].items.splice(iIdx, 1); render(); scheduleSave();
 }
@@ -768,7 +809,7 @@ function addImg(input, s, i) {
 function delImg(s, i, idx) { quoteData[s].items[i].images.splice(idx,1); render(); scheduleSave(); }
 
 // ═══════════════════════════════════════════
-//  RENDER
+//  RENDER — con zonas de inserción
 // ═══════════════════════════════════════════
 function render() {
   const body = document.getElementById('table-body');
@@ -777,7 +818,13 @@ function render() {
   hint.style.display = quoteData.length === 0 ? 'block' : 'none';
 
   quoteData.forEach((sec, sIdx) => {
-    // section row
+
+    // ── ZONA DE INSERCIÓN ENTRE SECCIONES (antes de esta sección) ──
+    if (sIdx > 0) {
+      body.appendChild(makeInsertZone(sIdx, null, true));
+    }
+
+    // ── FILA DE SECCIÓN ──
     const sr = document.createElement('tr');
     sr.className = 'row-section';
     sr.innerHTML = `
@@ -792,6 +839,13 @@ function render() {
     body.appendChild(sr);
 
     sec.items.forEach((item, iIdx) => {
+
+      // ── ZONA DE INSERCIÓN ENTRE CONCEPTOS (antes de este concepto) ──
+      if (iIdx > 0) {
+        body.appendChild(makeInsertZone(sIdx, iIdx, false));
+      }
+
+      // ── FILA DE CONCEPTO ──
       const tr = document.createElement('tr');
       tr.className = 'row-item';
       const imgs = item.images.map((src,imgIdx) => `
@@ -837,11 +891,11 @@ function render() {
         </td>`;
       body.appendChild(tr);
       calcRow(sIdx, iIdx);
-      // Set select value after DOM insertion
       const sel = document.getElementById('uni-'+sIdx+'-'+iIdx);
       if (sel) sel.value = item.uni || 'PZA';
     });
 
+    // Botón "Agregar concepto" al final de la sección
     const ar = document.createElement('tr');
     ar.className = 'no-print';
     ar.innerHTML = `<td colspan="8" style="padding:3px 8px;border-bottom:1px solid var(--border);">
@@ -851,6 +905,45 @@ function render() {
   });
 
   calcTotal();
+}
+
+/**
+ * Crea una fila <tr> con la zona de inserción.
+ * @param {number} sIdx  - índice de sección
+ * @param {number|null} iIdx - índice de ítem (null = insertar sección)
+ * @param {boolean} isSection - true si es zona entre secciones
+ */
+function makeInsertZone(sIdx, iIdx, isSection) {
+  const tr = document.createElement('tr');
+  tr.className = 'insert-row no-print';
+
+  const td = document.createElement('td');
+  td.colSpan = 8;
+  td.style.padding = '0';
+  td.style.border = 'none';
+
+  const zone = document.createElement('div');
+  zone.className = 'insert-zone';
+
+  // Botón insertar concepto (siempre visible en zonas entre ítems)
+  if (!isSection) {
+    const btn = document.createElement('button');
+    btn.className = 'iz-btn';
+    btn.innerHTML = '＋ Insertar concepto aquí';
+    btn.onclick = (e) => { e.stopPropagation(); insertItemBefore(sIdx, iIdx); };
+    zone.appendChild(btn);
+  }
+
+  // Botón insertar sección
+  const btnSec = document.createElement('button');
+  btnSec.className = isSection ? 'iz-btn' : 'iz-btn-sec';
+  btnSec.innerHTML = isSection ? '＋ Insertar sección aquí' : '＋ Sección';
+  btnSec.onclick = (e) => { e.stopPropagation(); insertSectionBefore(sIdx); };
+  zone.appendChild(btnSec);
+
+  td.appendChild(zone);
+  tr.appendChild(td);
+  return tr;
 }
 
 function escHtml(str) {
@@ -1063,13 +1156,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const src = document.getElementById('page-footer-text');
     const dst = document.getElementById('print-footer-fixed');
     if (!dst) return;
-    // Copiar contenido, ignorando el placeholder
     const html = src.querySelector('.placeholder-hint') ? '' : src.innerHTML;
     dst.innerHTML = html || '';
   }
-  // Sincronizar en cada cambio
   document.getElementById('page-footer-text').addEventListener('input', syncPrintFooter);
-  // Sincronizar antes de imprimir
   window.addEventListener('beforeprint', syncPrintFooter);
 });
 </script>
