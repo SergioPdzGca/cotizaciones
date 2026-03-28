@@ -62,6 +62,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   background:rgba(245,200,66,.25);border-color:rgba(245,200,66,.6);color:var(--accent);
 }
 
+/* session badge */
+#session-badge{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;
+  padding:8px 10px;
+  font-size:9.5px;
+  color:var(--green-mid);
+  line-height:1.6;
+}
+#session-badge strong{
+  display:block;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:rgba(255,255,255,.4);
+  margin-bottom:2px;
+}
+#session-badge .sid{
+  font-family:'DM Mono',monospace;
+  font-size:9px;
+  color:var(--accent);
+  opacity:.7;
+}
+
 /* auto-save indicator */
 #autosave-badge{
   margin-top:auto;padding-top:10px;
@@ -200,7 +225,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 }
 .del-btn:hover{color:var(--red);background:#fee2e2;}
 
-/* ── INSERT ZONE (pantalla) ── */
+/* ── INSERT ZONE ── */
 .insert-zone{
   position:relative;height:6px;cursor:pointer;
   transition:height var(--transition);
@@ -227,11 +252,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   white-space:nowrap;align-items:center;gap:3px;
 }
 .insert-zone:hover .iz-btn-sec{display:flex;}
-
-/* filas de zona inserción — no tiene borde visible */
 tr.insert-row td{padding:0 !important;border:none !important;background:transparent !important;}
 
-/* ── IMÁGENES — más grandes en pantalla ── */
+/* ── IMÁGENES ── */
 .img-cell{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
 .img-thumb{position:relative;}
 .img-thumb img{
@@ -303,7 +326,7 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 }
 .uni-select:hover,.uni-select:focus{background:var(--green-light);}
 
-/* ── PIE DE PÁGINA EDITABLE (pantalla) ── */
+/* ── PIE DE PÁGINA EDITABLE ── */
 .page-footer-editor{
   border-top:2px solid var(--green);
   padding:10px 32px 14px;
@@ -322,7 +345,7 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 }
 .page-footer-inner:hover,.page-footer-inner:focus{background:var(--white);}
 
-/* ── PIE FIJO EN IMPRESIÓN (se repite cada hoja) ── */
+/* ── PIE FIJO EN IMPRESIÓN ── */
 #print-footer-fixed{display:none;}
 @media print{
   @page{ margin-bottom:2cm; }
@@ -393,13 +416,12 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   padding-left: 14pt !important;
   font-variant-numeric: tabular-nums;
 }
-
 #quote-table tbody tr td:nth-child(6)::before {
   content: "$";
   position: absolute;
   left: 4pt;
 }
-  #quote-table thead tr th:nth-child(6) { width: 60pt !important; } /* P.U */
+  #quote-table thead tr th:nth-child(6) { width: 60pt !important; }
 #quote-table tbody tr td:nth-child(7) {
   text-align: right !important;
   font-family: 'DM Mono', monospace !important;
@@ -464,7 +486,6 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   .page-footer-editor { border-top: 1.5pt solid var(--green) !important; padding: 0 !important; display: none !important; }
   .page-footer-inner { font-size: 7pt !important; color: #555 !important; }
   .placeholder-hint { display: none !important; }
-  /* Ocultar filas de inserción en impresión */
   tr.insert-row { display: none !important; }
 }
 </style>
@@ -509,12 +530,30 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
   <input type="file" id="load-json" style="display:none" accept=".json" onchange="loadJSON(this)">
 
   <hr>
-  <div class="tlabel">Auto-guardado</div>
+
+  <!-- SESIÓN ACTUAL -->
+  <div class="tlabel">Sesión actual</div>
+  <div id="session-badge">
+    <strong>ID de pestaña</strong>
+    <span class="sid" id="session-id-display">—</span>
+  </div>
+  <button onclick="openNewTab()" class="primary" style="margin-top:2px;">
+    <span class="icon">➕</span> Nueva cotización
+  </button>
+  <button onclick="duplicateTab()" style="background:rgba(163,212,180,.12);border-color:rgba(163,212,180,.3);">
+    <span class="icon">📋</span> Duplicar esta
+  </button>
+
+  <hr>
+  <div class="tlabel">Guardado</div>
   <button onclick="manualSave()" style="background:rgba(74,222,128,.12);border-color:rgba(74,222,128,.3);color:#4ade80;">
     <span class="icon">💚</span> Guardar ahora
   </button>
-  <button onclick="clearSaved()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
-    <span class="icon">🗑</span> Limpiar guardado
+  <button onclick="clearCurrentSession()" style="color:#fca5a5;border-color:rgba(220,38,38,.3);">
+    <span class="icon">🗑</span> Limpiar esta hoja
+  </button>
+  <button onclick="showSessionManager()" style="font-size:11px;">
+    <span class="icon">📂</span> Ver guardadas
   </button>
 
   <div id="autosave-badge">
@@ -522,6 +561,18 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
     <div id="save-time" style="margin-top:2px;opacity:.6;"></div>
   </div>
 </nav>
+
+<!-- MODAL: GESTIÓN DE SESIONES -->
+<div id="session-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:14px;padding:28px 32px;min-width:380px;max-width:520px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,.25);max-height:80vh;display:flex;flex-direction:column;gap:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--green-dark);">📂 Cotizaciones guardadas</h2>
+      <button onclick="closeSessionManager()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <p style="font-size:11px;color:var(--muted);">Haz clic en una cotización para abrirla en esta pestaña, o usa el botón para abrirla en una pestaña nueva.</p>
+    <div id="session-list" style="overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
 
 <!-- PAPER -->
 <div id="wrapper">
@@ -658,12 +709,37 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 </div><!-- /paper -->
 </div><!-- /wrapper -->
 
-<!-- PIE FIJO PARA IMPRESIÓN — se repite en cada hoja -->
+<!-- PIE FIJO PARA IMPRESIÓN -->
 <div id="print-footer-fixed"></div>
 
 <div id="toast"></div>
 
 <script>
+// ═══════════════════════════════════════════
+//  SESIÓN POR PESTAÑA
+//  Cada pestaña tiene su propio SESSION_ID
+//  guardado en sessionStorage (se destruye
+//  al cerrar la pestaña). Los datos van en
+//  localStorage bajo la llave
+//  "dimcer_session_<ID>"
+// ═══════════════════════════════════════════
+
+const LOGO_KEY       = 'dimcer_logo';
+const SESSION_PREFIX = 'dimcer_session_';
+
+// El ID vive en el hash de la URL (#COT-XXXXX).
+// Recarga = mismo hash = mismo ID. Pestaña nueva = hash vacío = ID nuevo.
+function initSessionId() {
+  const hashId = location.hash.replace('#','');
+  if (hashId && hashId.startsWith('COT-')) return hashId;
+  const newId = 'COT-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+  history.replaceState(null,'', location.pathname + location.search + '#' + newId);
+  return newId;
+}
+const SESSION_ID = initSessionId();
+
+function saveKey() { return SESSION_PREFIX + SESSION_ID; }
+
 // ═══════════════════════════════════════════
 //  DATA
 // ═══════════════════════════════════════════
@@ -679,7 +755,7 @@ function loadLogo(input) {
   const r = new FileReader();
   r.onload = e => {
     applyLogo(e.target.result);
-    try { localStorage.setItem('dimcer_logo', e.target.result); } catch(ex){}
+    try { localStorage.setItem(LOGO_KEY, e.target.result); } catch(ex){}
     toast('✅ Logo guardado');
     scheduleSave();
   };
@@ -697,7 +773,7 @@ function clearLogo() {
   const img = zone.querySelector('img');
   if (img) img.remove();
   document.getElementById('logo-hint').style.display = '';
-  try { localStorage.removeItem('dimcer_logo'); } catch(ex){}
+  try { localStorage.removeItem(LOGO_KEY); } catch(ex){}
   toast('Logo eliminado');
   scheduleSave();
 }
@@ -729,7 +805,6 @@ const ALIGN_CMDS = {
   right:   'justifyRight',
   justify: 'justifyFull'
 };
-
 function setAlign(dir) {
   document.execCommand(ALIGN_CMDS[dir]);
   ['left','center','right','justify'].forEach(d => {
@@ -738,7 +813,6 @@ function setAlign(dir) {
   });
   scheduleSave();
 }
-
 document.addEventListener('selectionchange', () => {
   const map = {
     left:    document.queryCommandState('justifyLeft'),
@@ -753,46 +827,34 @@ document.addEventListener('selectionchange', () => {
 });
 
 // ═══════════════════════════════════════════
-//  SECTIONS & ITEMS — CON INSERCIÓN EN MEDIO
+//  SECTIONS & ITEMS
 // ═══════════════════════════════════════════
-
-/** Agregar sección AL FINAL */
 function addSection() {
   const t = prompt('Nombre de la sección:', 'NUEVA SECCIÓN');
   if (!t) return;
   quoteData.push({ title: t, items: [] });
-  render();
-  scheduleSave();
+  render(); scheduleSave();
 }
-
-/** Insertar sección ANTES del índice sIdx */
 function insertSectionBefore(sIdx) {
   const t = prompt('Nombre de la nueva sección:', 'NUEVA SECCIÓN');
   if (!t) return;
   quoteData.splice(sIdx, 0, { title: t, items: [] });
-  render();
-  scheduleSave();
+  render(); scheduleSave();
   toast('✅ Sección insertada');
 }
-
 function deleteSection(sIdx) {
   if (!confirm('¿Eliminar sección "' + quoteData[sIdx].title + '"?')) return;
   quoteData.splice(sIdx, 1); render(); scheduleSave();
 }
-
-/** Agregar concepto AL FINAL de la sección */
 function addItem(sIdx) {
   quoteData[sIdx].items.push({ cant:1, uni:'PZA', desc:'', pu:0, images:[] });
   render(); scheduleSave();
 }
-
-/** Insertar concepto ANTES del índice iIdx dentro de sección sIdx */
 function insertItemBefore(sIdx, iIdx) {
   quoteData[sIdx].items.splice(iIdx, 0, { cant:1, uni:'PZA', desc:'', pu:0, images:[] });
   render(); scheduleSave();
   toast('✅ Concepto insertado');
 }
-
 function deleteItem(sIdx, iIdx) {
   quoteData[sIdx].items.splice(iIdx, 1); render(); scheduleSave();
 }
@@ -809,7 +871,7 @@ function addImg(input, s, i) {
 function delImg(s, i, idx) { quoteData[s].items[i].images.splice(idx,1); render(); scheduleSave(); }
 
 // ═══════════════════════════════════════════
-//  RENDER — con zonas de inserción
+//  RENDER
 // ═══════════════════════════════════════════
 function render() {
   const body = document.getElementById('table-body');
@@ -818,13 +880,8 @@ function render() {
   hint.style.display = quoteData.length === 0 ? 'block' : 'none';
 
   quoteData.forEach((sec, sIdx) => {
+    if (sIdx > 0) body.appendChild(makeInsertZone(sIdx, null, true));
 
-    // ── ZONA DE INSERCIÓN ENTRE SECCIONES (antes de esta sección) ──
-    if (sIdx > 0) {
-      body.appendChild(makeInsertZone(sIdx, null, true));
-    }
-
-    // ── FILA DE SECCIÓN ──
     const sr = document.createElement('tr');
     sr.className = 'row-section';
     sr.innerHTML = `
@@ -839,13 +896,8 @@ function render() {
     body.appendChild(sr);
 
     sec.items.forEach((item, iIdx) => {
+      if (iIdx > 0) body.appendChild(makeInsertZone(sIdx, iIdx, false));
 
-      // ── ZONA DE INSERCIÓN ENTRE CONCEPTOS (antes de este concepto) ──
-      if (iIdx > 0) {
-        body.appendChild(makeInsertZone(sIdx, iIdx, false));
-      }
-
-      // ── FILA DE CONCEPTO ──
       const tr = document.createElement('tr');
       tr.className = 'row-item';
       const imgs = item.images.map((src,imgIdx) => `
@@ -869,7 +921,7 @@ function render() {
             <option value="KIT">KIT</option>
           </select>
         </td>
-        <td style="">
+        <td>
           <div class="cell-edit" contenteditable="true" spellcheck="false"
             oninput="quoteData[${sIdx}].items[${iIdx}].desc=this.innerHTML;scheduleSave();">${item.desc}</div>
         </td>
@@ -895,7 +947,6 @@ function render() {
       if (sel) sel.value = item.uni || 'PZA';
     });
 
-    // Botón "Agregar concepto" al final de la sección
     const ar = document.createElement('tr');
     ar.className = 'no-print';
     ar.innerHTML = `<td colspan="8" style="padding:3px 8px;border-bottom:1px solid var(--border);">
@@ -907,25 +958,14 @@ function render() {
   calcTotal();
 }
 
-/**
- * Crea una fila <tr> con la zona de inserción.
- * @param {number} sIdx  - índice de sección
- * @param {number|null} iIdx - índice de ítem (null = insertar sección)
- * @param {boolean} isSection - true si es zona entre secciones
- */
 function makeInsertZone(sIdx, iIdx, isSection) {
   const tr = document.createElement('tr');
   tr.className = 'insert-row no-print';
-
   const td = document.createElement('td');
   td.colSpan = 8;
-  td.style.padding = '0';
-  td.style.border = 'none';
-
+  td.style.cssText = 'padding:0;border:none;';
   const zone = document.createElement('div');
   zone.className = 'insert-zone';
-
-  // Botón insertar concepto (siempre visible en zonas entre ítems)
   if (!isSection) {
     const btn = document.createElement('button');
     btn.className = 'iz-btn';
@@ -933,14 +973,11 @@ function makeInsertZone(sIdx, iIdx, isSection) {
     btn.onclick = (e) => { e.stopPropagation(); insertItemBefore(sIdx, iIdx); };
     zone.appendChild(btn);
   }
-
-  // Botón insertar sección
   const btnSec = document.createElement('button');
   btnSec.className = isSection ? 'iz-btn' : 'iz-btn-sec';
   btnSec.innerHTML = isSection ? '＋ Insertar sección aquí' : '＋ Sección';
   btnSec.onclick = (e) => { e.stopPropagation(); insertSectionBefore(sIdx); };
   zone.appendChild(btnSec);
-
   td.appendChild(zone);
   tr.appendChild(td);
   return tr;
@@ -980,12 +1017,11 @@ function fmt(n) {
 }
 
 // ═══════════════════════════════════════════
-//  AUTO-SAVE
+//  GUARDADO POR SESIÓN
 // ═══════════════════════════════════════════
-const SAVE_KEY = 'dimcer_cotizacion_autosave';
-
 function collectState() {
   return {
+    sessionId: SESSION_ID,
     quoteData,
     iva: document.getElementById('iva-check').checked,
     fields: {
@@ -1034,7 +1070,7 @@ function scheduleSave() {
 function doSave() {
   try {
     const state = collectState();
-    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    localStorage.setItem(saveKey(), JSON.stringify(state));
     const t = new Date(state.savedAt);
     const ts = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     setSaveDot('saved', 'Guardado');
@@ -1051,9 +1087,9 @@ function manualSave() {
   toast('💚 Guardado manualmente');
 }
 
-function clearSaved() {
-  if (!confirm('¿Limpiar el auto-guardado y empezar desde cero?')) return;
-  try { localStorage.removeItem(SAVE_KEY); } catch(e){}
+function clearCurrentSession() {
+  if (!confirm('¿Limpiar esta hoja y empezar desde cero?\n(No afecta otras pestañas)')) return;
+  try { localStorage.removeItem(saveKey()); } catch(e){}
   quoteData = [];
   render();
   ['company-info','advisor-name','meta-num','meta-fecha','meta-cliente-id',
@@ -1063,7 +1099,7 @@ function clearSaved() {
   });
   setSaveDot('','Sin cambios');
   document.getElementById('save-time').textContent = '';
-  toast('🗑 Pizarra limpia');
+  toast('🗑 Hoja limpia');
 }
 
 function setSaveDot(state, label) {
@@ -1073,9 +1109,131 @@ function setSaveDot(state, label) {
   lbl.textContent = label;
 }
 
-window.addEventListener('beforeunload', () => {
-  if (isDirty) doSave();
-});
+window.addEventListener('beforeunload', () => { if (isDirty) doSave(); });
+
+// ═══════════════════════════════════════════
+//  NUEVA PESTAÑA / DUPLICAR
+// ═══════════════════════════════════════════
+function openNewTab() {
+  // Abre sin hash → la nueva pestaña genera su propio ID único
+  window.open(location.pathname, '_blank');
+}
+
+function duplicateTab() {
+  // Guarda estado actual y lo transfiere a una nueva pestaña vía localStorage temporal
+  const state = collectState();
+  const tmpKey = 'dimcer_transfer_' + Date.now();
+  try { localStorage.setItem(tmpKey, JSON.stringify(state)); } catch(e) {}
+  const newUrl = location.href + (location.href.includes('?') ? '&' : '?') + 'transfer=' + encodeURIComponent(tmpKey);
+  window.open(newUrl, '_blank');
+  toast('📋 Duplicando en nueva pestaña…');
+}
+
+// ═══════════════════════════════════════════
+//  GESTOR DE SESIONES
+// ═══════════════════════════════════════════
+function getAllSessions() {
+  const sessions = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith(SESSION_PREFIX)) {
+      try {
+        const s = JSON.parse(localStorage.getItem(k));
+        if (s) sessions.push({ key: k, data: s });
+      } catch(e) {}
+    }
+  }
+  sessions.sort((a,b) => new Date(b.data.savedAt) - new Date(a.data.savedAt));
+  return sessions;
+}
+
+function showSessionManager() {
+  const list = document.getElementById('session-list');
+  list.innerHTML = '';
+  const sessions = getAllSessions();
+  if (sessions.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">No hay cotizaciones guardadas.</p>';
+  } else {
+    sessions.forEach(({ key, data }) => {
+      const isActive = key === saveKey();
+      const clientText = data.fields?.clientInfo
+        ? new DOMParser().parseFromString(data.fields.clientInfo,'text/html').body.innerText.trim().slice(0,40) || '(sin cliente)'
+        : '(sin cliente)';
+      const numText = data.fields?.metaNum || '—';
+      const fecha   = data.savedAt ? new Date(data.savedAt).toLocaleString('es-MX') : '—';
+
+      const card = document.createElement('div');
+      card.style.cssText = `
+        border:1.5px solid ${isActive ? 'var(--green)' : 'var(--border)'};
+        border-radius:10px;padding:12px 14px;
+        background:${isActive ? 'var(--green-light)' : '#fafafa'};
+        display:flex;justify-content:space-between;align-items:center;gap:10px;
+      `;
+      card.innerHTML = `
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:12px;color:var(--green-dark);">
+            ${isActive ? '🟢 ' : ''}N° ${escHtml(numText)}
+            ${isActive ? '<span style="font-size:9px;color:var(--green);margin-left:6px;">(esta pestaña)</span>' : ''}
+          </div>
+          <div style="font-size:10.5px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            ${escHtml(clientText)}
+          </div>
+          <div style="font-size:9px;color:var(--muted);margin-top:3px;">💾 ${fecha}</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          ${!isActive ? `
+          <button onclick="loadSessionHere('${key}')"
+            style="background:var(--green);color:#fff;border:none;border-radius:7px;
+                   padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            Abrir aquí
+          </button>
+          <button onclick="loadSessionNewTab('${key}')"
+            style="background:var(--green-dark);color:#fff;border:none;border-radius:7px;
+                   padding:6px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            Nueva pestaña
+          </button>` : '<span style="font-size:10px;color:var(--green);">Activa</span>'}
+          <button onclick="deleteSession('${key}')"
+            style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;
+                   padding:6px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            🗑
+          </button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+  const modal = document.getElementById('session-modal');
+  modal.style.display = 'flex';
+}
+
+function closeSessionManager() {
+  document.getElementById('session-modal').style.display = 'none';
+}
+
+function loadSessionHere(key) {
+  if (!confirm('¿Cargar esta cotización en la pestaña actual?\nSe perderán los cambios no guardados.')) return;
+  try {
+    const state = JSON.parse(localStorage.getItem(key));
+    applyState(state);
+    closeSessionManager();
+    toast('✅ Cotización cargada');
+  } catch(e) { alert('Error al cargar'); }
+}
+
+function loadSessionNewTab(key) {
+  const newUrl = location.href + (location.href.includes('?') ? '&' : '?') + 'transfer=' + encodeURIComponent(key);
+  window.open(newUrl, '_blank');
+  closeSessionManager();
+  toast('📂 Abriendo en nueva pestaña…');
+}
+
+function deleteSession(key) {
+  if (key === saveKey()) { alert('No puedes eliminar la sesión activa desde aquí.\nUsa "Limpiar esta hoja".'); return; }
+  if (!confirm('¿Eliminar esta cotización guardada?')) return;
+  localStorage.removeItem(key);
+  showSessionManager();
+  toast('🗑 Cotización eliminada');
+}
 
 // ═══════════════════════════════════════════
 //  EXPORT / IMPORT JSON
@@ -1083,7 +1241,7 @@ window.addEventListener('beforeunload', () => {
 function saveJSON() {
   const blob = new Blob([JSON.stringify(collectState(),null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'cotizacion_dimcer.json'; a.click();
+  a.download = 'cotizacion_dimcer_' + SESSION_ID + '.json'; a.click();
   toast('📥 Exportada como JSON');
 }
 function loadJSON(input) {
@@ -1113,6 +1271,9 @@ function toast(msg) {
 //  INIT
 // ═══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
+  // Mostrar ID de sesión en sidebar
+  document.getElementById('session-id-display').textContent = SESSION_ID;
+
   initPlaceholders();
 
   document.getElementById('page-footer-text').addEventListener('input', scheduleSave);
@@ -1121,18 +1282,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('terms-body').addEventListener('input', scheduleSave);
 
+  // Logo compartido
   try {
-    const logo = localStorage.getItem('dimcer_logo');
+    const logo = localStorage.getItem(LOGO_KEY);
     if (logo) applyLogo(logo);
   } catch(e){}
 
+  // ── TRANSFERENCIA DE DATOS AL ABRIR NUEVA PESTAÑA ──
+  const urlParams = new URLSearchParams(location.search);
+  const transferKey = urlParams.get('transfer');
+  if (transferKey) {
+    try {
+      const transferred = JSON.parse(localStorage.getItem(transferKey));
+      if (transferred) {
+        localStorage.removeItem(transferKey); // limpiar clave temporal
+        // Guardar bajo esta sesión nueva
+        applyState(transferred);
+        doSave();
+        setSaveDot('saved','Duplicada');
+        toast('📋 Cotización duplicada en esta pestaña');
+        // Limpiar URL
+        history.replaceState({}, '', location.pathname);
+        return;
+      }
+    } catch(e) {}
+  }
+
+  // ── RESTAURAR SESIÓN PROPIA ──
   try {
-    const raw = localStorage.getItem(SAVE_KEY);
+    const raw = localStorage.getItem(saveKey());
     if (raw) {
       const state = JSON.parse(raw);
       const t = new Date(state.savedAt);
       const ts = t.toLocaleString('es-MX');
-      if (confirm(`Se encontró una cotización guardada del ${ts}.\n¿Deseas restaurarla?`)) {
+      if (confirm(`Esta pestaña tenía una cotización guardada del ${ts}.\n¿Deseas restaurarla?`)) {
         applyState(state);
         setSaveDot('saved','Restaurada');
         document.getElementById('save-time').textContent = t.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
@@ -1142,8 +1325,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch(e){}
 
-  const hoy   = new Date();
-  const fmtD  = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
+  // Nueva sesión en blanco
+  const hoy  = new Date();
+  const fmtD = d => d.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'});
   document.getElementById('meta-fecha').textContent = fmtD(hoy);
   const valid = new Date(hoy); valid.setDate(valid.getDate()+30);
   document.getElementById('meta-valid').textContent = fmtD(valid);
@@ -1151,7 +1335,7 @@ document.addEventListener('DOMContentLoaded', () => {
   render();
   setSaveDot('','Sin cambios');
 
-  // ── SYNC PIE DE PÁGINA FIJO PARA IMPRESIÓN ──
+  // Sync pie de página para impresión
   function syncPrintFooter() {
     const src = document.getElementById('page-footer-text');
     const dst = document.getElementById('print-footer-fixed');
@@ -1161,6 +1345,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.getElementById('page-footer-text').addEventListener('input', syncPrintFooter);
   window.addEventListener('beforeprint', syncPrintFooter);
+
+  // Cerrar modal con clic fuera
+  document.getElementById('session-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeSessionManager();
+  });
 });
 </script>
 </body>
