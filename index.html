@@ -726,17 +726,57 @@ tr.insert-row td{padding:0 !important;border:none !important;background:transpar
 
 const LOGO_KEY       = 'dimcer_logo';
 const SESSION_PREFIX = 'dimcer_session_';
+const CLAIMED_PREFIX = 'dimcer_claimed_';
 
-// El ID vive en el hash de la URL (#COT-XXXXX).
-// Recarga = mismo hash = mismo ID. Pestaña nueva = hash vacío = ID nuevo.
-function initSessionId() {
-  const hashId = location.hash.replace('#','');
-  if (hashId && hashId.startsWith('COT-')) return hashId;
-  const newId = 'COT-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
-  history.replaceState(null,'', location.pathname + location.search + '#' + newId);
-  return newId;
+// ── CÓMO FUNCIONA LA SESIÓN ──
+// sessionStorage se copia cuando el navegador duplica una pestaña (Ctrl+D,
+// clic derecho → duplicar). Para evitar que dos pestañas compartan el mismo ID
+// usamos un flag "reclamado" en localStorage:
+//   - Al cargar, leemos el ID de sessionStorage.
+//   - Si ese ID YA está reclamado en localStorage por OTRA instancia,
+//     generamos un ID nuevo (esta es una pestaña duplicada).
+//   - Si no está reclamado, lo reclamamos ahora.
+// Al cerrar la pestaña (beforeunload) liberamos el claim.
+// Esto garantiza que cada pestaña activa tenga un ID único, incluso si
+// el navegador duplicó el sessionStorage.
+
+function genId() {
+  return 'COT-' + Date.now().toString(36).toUpperCase()
+       + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
 }
+
+function initSessionId() {
+  // ¿Hay un ID en sessionStorage?
+  let id = sessionStorage.getItem('dimcer_tab_id');
+
+  if (id) {
+    // Verificar si ya está reclamado por OTRA pestaña activa
+    const claimVal = localStorage.getItem(CLAIMED_PREFIX + id);
+    const myMark   = sessionStorage.getItem('dimcer_my_claim');
+    // Si el claim existe Y no fue puesto por esta misma instancia → duplicada
+    if (claimVal && claimVal !== myMark) {
+      id = genId(); // nueva pestaña duplicada: nuevo ID
+      sessionStorage.setItem('dimcer_tab_id', id);
+    }
+  } else {
+    id = genId();
+    sessionStorage.setItem('dimcer_tab_id', id);
+  }
+
+  // Reclamar este ID con una marca única de instancia
+  const mark = Date.now() + '-' + Math.random();
+  sessionStorage.setItem('dimcer_my_claim', mark);
+  localStorage.setItem(CLAIMED_PREFIX + id, mark);
+
+  return id;
+}
+
 const SESSION_ID = initSessionId();
+
+// Liberar el claim al cerrar para no bloquear futuras restauraciones
+window.addEventListener('pagehide', () => {
+  localStorage.removeItem(CLAIMED_PREFIX + SESSION_ID);
+});
 
 function saveKey() { return SESSION_PREFIX + SESSION_ID; }
 
@@ -1115,17 +1155,19 @@ window.addEventListener('beforeunload', () => { if (isDirty) doSave(); });
 //  NUEVA PESTAÑA / DUPLICAR
 // ═══════════════════════════════════════════
 function openNewTab() {
-  // Abre sin hash → la nueva pestaña genera su propio ID único
-  window.open(location.pathname, '_blank');
+  // Abre una copia limpia del archivo en pestaña nueva
+  // Funciona tanto con file:// como con http://
+  window.open(location.href.split('#')[0].split('?')[0], '_blank');
 }
 
 function duplicateTab() {
-  // Guarda estado actual y lo transfiere a una nueva pestaña vía localStorage temporal
   const state = collectState();
   const tmpKey = 'dimcer_transfer_' + Date.now();
-  try { localStorage.setItem(tmpKey, JSON.stringify(state)); } catch(e) {}
-  const newUrl = location.href + (location.href.includes('?') ? '&' : '?') + 'transfer=' + encodeURIComponent(tmpKey);
-  window.open(newUrl, '_blank');
+  try { localStorage.setItem(tmpKey, JSON.stringify(state)); } catch(e) {
+    alert('No se pudo duplicar: localStorage no disponible'); return;
+  }
+  const base = location.href.split('#')[0].split('?')[0];
+  window.open(base + '?transfer=' + encodeURIComponent(tmpKey), '_blank');
   toast('📋 Duplicando en nueva pestaña…');
 }
 
@@ -1221,8 +1263,8 @@ function loadSessionHere(key) {
 }
 
 function loadSessionNewTab(key) {
-  const newUrl = location.href + (location.href.includes('?') ? '&' : '?') + 'transfer=' + encodeURIComponent(key);
-  window.open(newUrl, '_blank');
+  const base = location.href.split('#')[0].split('?')[0];
+  window.open(base + '?transfer=' + encodeURIComponent(key), '_blank');
   closeSessionManager();
   toast('📂 Abriendo en nueva pestaña…');
 }
@@ -1295,14 +1337,14 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const transferred = JSON.parse(localStorage.getItem(transferKey));
       if (transferred) {
-        localStorage.removeItem(transferKey); // limpiar clave temporal
-        // Guardar bajo esta sesión nueva
+        localStorage.removeItem(transferKey);
         applyState(transferred);
         doSave();
         setSaveDot('saved','Duplicada');
         toast('📋 Cotización duplicada en esta pestaña');
-        // Limpiar URL
-        history.replaceState({}, '', location.pathname);
+        // Limpiar ?transfer= de la URL sin recargar
+        const cleanUrl = location.href.split('?')[0];
+        history.replaceState({}, '', cleanUrl);
         return;
       }
     } catch(e) {}
